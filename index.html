@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Khắc Tín - Yến Nhi - Digital Wedding Invitation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Alex+Brush&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="bg-[#d7d7d7] text-[#333333] font-sans">
+  <div class="site-shell">
+    <canvas id="petal-canvas" aria-hidden="true"></canvas>
+
+    <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white">
+      <div class="spinner"></div>
+      <p class="mt-4 text-sm text-gray-500 tracking-wide">Đang tải xem thử...</p>
+    </div>
+
+    <div id="envelope" class="fixed inset-0 z-[90]">
+      <div class="door left">
+        <div class="pt-20 text-center text-[#C5A880]">
+          <p class="font-script text-6xl leading-none">Save</p>
+          <p class="font-serif text-2xl tracking-[0.35em] mt-2">THE DATE</p>
+        </div>
+      </div>
+      <div class="door right"></div>
+      <button id="seal-btn" class="seal" aria-label="Mở thiệp">
+        <i class="fa-solid fa-leaf"></i>
+      </button>
+    </div>
+
+    <audio id="bg-audio" loop preload="none" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
+      <button id="fab-music" class="fab bg-gray-500" aria-label="Bật tắt nhạc">
+        <i class="fa-solid fa-music"></i>
+        <i id="music-off-icon" class="fa-solid fa-slash text-[10px] absolute"></i>
+      </button>
+    </div>
+
+    <main>
+      <header class="relative h-screen overflow-hidden hero-frame">
+        <img data-img-key="hero" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" alt="Ảnh cưới Mai Thu và Minh Khanh" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <div class="absolute bottom-[14vh] left-0 text-center text-white w-full px-5 reveal reveal-stagger text-reveal hero-text-wrap">
+          <h1 id="couple-names" class="font-serif uppercase hero-couple-title">Mai Thu &amp; Minh Khanh</h1>
+          <p id="wedding-date" class="mt-3 tracking-[0.3em] text-sm">14.12.2025</p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+      </header>
+
+      <section class="px-6 py-16 bg-[#FDFBF7] text-center text-reveal reveal">
+        <div class="flex justify-between gap-4 reveal">
+          <article class="w-1/2">
+            <h3 class="font-serif text-lg font-semibold tracking-wider">NHÀ GÁI</h3>
+            <p id="bride-family" class="text-sm text-gray-600 leading-7 mt-1">Ông Phạm Văn Hiển<br>Bà Đỗ Thị Đông</p>
+          </article>
+          <article class="w-1/2">
+            <h3 class="font-serif text-lg font-semibold tracking-wider">NHÀ TRAI</h3>
+            <p id="groom-family" class="text-sm text-gray-600 leading-7 mt-1">Ông Đặng Quang Hưng<br>Bà Lê Minh Thu</p>
+          </article>
+        </div>
+
+        <article class="mt-10 p-6 sm:p-8 border border-[#C5A880] invitation-frame bg-white shadow-[0_12px_40px_rgba(0,0,0,0.04)] reveal reveal-stagger text-reveal">
+          <div class="monogram-wrap mx-auto mb-6">
+            <div class="monogram">K&amp;T</div>
+          </div>
+          <p id="invite-message" class="text-[11px] tracking-[0.12em] leading-6 text-gray-600 uppercase">
+            Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi
+          </p>
+          <h2 id="couple-script" class="font-script custom-script text-[#C5A880] text-6xl leading-[0.85] mt-5">Mai Thu<br>Minh Khanh</h2>
+          <p id="event-time" class="mt-7 text-xs tracking-[0.12em] text-gray-600">VÀO LÚC 15 GIỜ | CHỦ NHẬT</p>
+          <p id="event-date-text" class="font-serif text-2xl font-bold mt-2">NGÀY 14 THÁNG 12 NĂM 2025</p>
+          <p id="event-date-lunar" class="text-xs text-gray-600 mt-1">(TỨC NGÀY 25 THÁNG 10 NĂM ẤT TỴ)</p>
+          <p class="text-xs tracking-[0.12em] text-gray-600 mt-8">ĐỊA ĐIỂM TỔ CHỨC TẠI</p>
+          <p id="venue-name" class="font-serif text-2xl font-semibold mt-2">TRUNG TÂM TIỆC CƯỚI TÂN AN</p>
+          <p id="venue-address" class="text-sm text-gray-600 leading-6 mt-2">Số 22 Đường Hồng Bàng, P. Hồng Bàng, TP. Hải Phòng</p>
+          <a href="https://www.google.com/maps/search/?api=1&query=Trung+T%C3%A2m+Ti%E1%BB%87c+C%C6%B0%E1%BB%9Bi+T%C3%A2n+An+22+H%E1%BB%93ng+B%C3%A0ng+H%E1%BA%A3i+Ph%C3%B2ng" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 mt-7 px-8 py-3 border border-[#C5A880] rounded-full text-[#C5A880] text-xs font-semibold tracking-wide">
+            <i class="fa-solid fa-location-dot"></i> CHỈ ĐƯỜNG
+          </a>
+        </article>
+      </section>
+
+      <section class="relative h-[340px] overflow-hidden reveal section-divider-top">
+        <img data-img-key="saveDate" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1200" alt="Save the date background" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/45 to-black/20"></div>
+        <div class="absolute bottom-8 left-6 text-white text-reveal reveal">
+          <h2 class="font-serif text-5xl leading-none tracking-[0.16em]">SAVE</h2>
+          <p class="font-script text-6xl -mt-2">the Date</p>
+        </div>
+      </section>
+
+      <section class="px-6 py-16 bg-white text-center text-reveal reveal">
+        <div class="flex items-end justify-center mb-8 reveal">
+          <p id="calendar-year" class="font-serif text-7xl leading-none text-[#C5A880] calendar-year">2025</p>
+          <p id="calendar-month" class="font-script text-5xl text-[#C5A880] -ml-2 calendar-month">Tháng 12</p>
+        </div>
+
+        <div id="calendar-grid" class="calendar reveal">
+          <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+        </div>
+
+        <p id="countdown-label" class="mt-10 text-xs text-gray-600 tracking-wide reveal">We'll be sharing a home and a life together in</p>
+        <div class="countdown reveal">
+          <div id="days">000</div><span>:</span><div id="hours">00</div><span>:</span><div id="mins">00</div><span>:</span><div id="secs">00</div>
+        </div>
+      </section>
+
+      <section class="relative py-16 px-6 text-white overflow-hidden timeline-sec text-reveal reveal">
+        <img data-img-key="timelineBg" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200" alt="Timeline background" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/65"></div>
+        <div class="relative z-10 text-reveal reveal">
+          <h2 class="font-script text-7xl text-[#D4AF37] text-center">Timeline</h2>
+          <p id="timeline-date" class="text-center tracking-[0.35em] text-sm mb-10 reveal">14 . 12 . 2025</p>
+          <div class="timeline-list">
+            <article class="timeline-item reveal">
+              <i class="fa-solid fa-camera-retro timeline-icon"></i>
+              <div><h4>Đón khách</h4><p>15 giờ</p></div>
+            </article>
+            <article class="timeline-item reveal">
+              <i class="fa-solid fa-ring timeline-icon"></i>
+              <div><h4>Nghi lễ cưới</h4><p>16 giờ</p></div>
+            </article>
+            <article class="timeline-item reveal">
+              <i class="fa-solid fa-utensils timeline-icon"></i>
+              <div><h4>Khai tiệc</h4><p>17 giờ</p></div>
+            </article>
+            <article class="timeline-item reveal">
+              <i class="fa-solid fa-compact-disc timeline-icon"></i>
+              <div><h4>Giao lưu với CDCR</h4><p>18 giờ 30 phút</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="album-section" class="px-5 py-16 bg-white album-sec section-divider-bottom">
+        <header class="mb-10 reveal text-reveal">
+          <p class="font-script text-7xl text-[#C5A880] leading-none">The</p>
+          <h2 class="font-serif text-4xl tracking-[0.25em] ml-8">ALBUM</h2>
+          <p class="font-serif text-sm tracking-[0.45em] text-gray-500 ml-10">OF LOVE</p>
+        </header>
+        <div class="album-grid reveal">
+          <img data-img-key="album1" data-caption-key="albumCaption1" src="" alt="Album 1" class="album-item album-reveal from-right" style="--album-delay: 0.06s;">
+          <img data-img-key="album2" data-caption-key="albumCaption2" src="" alt="Album 2" class="album-item album-reveal from-left" style="--album-delay: 0.14s;">
+          <img data-img-key="album3" data-caption-key="albumCaption3" src="" alt="Album 3" class="album-item album-reveal from-right" style="--album-delay: 0.22s;">
+          <img data-img-key="album4" data-caption-key="albumCaption4" src="" alt="Album 4" class="album-item album-reveal from-left" style="--album-delay: 0.30s;">
+          <img data-img-key="album5" data-caption-key="albumCaption5" src="" alt="Album 5" class="album-item album-reveal from-right" style="--album-delay: 0.38s;">
+          <img data-img-key="album6" data-caption-key="albumCaption6" src="" alt="Album 6" class="album-item album-reveal from-left" style="--album-delay: 0.46s;">
+          <img data-img-key="album7" data-caption-key="albumCaption7" src="" alt="Album 7" class="album-item album-reveal from-right" style="--album-delay: 0.54s;">
+          <img data-img-key="album8" data-caption-key="albumCaption8" src="" alt="Album 8" class="album-item album-reveal from-left" style="--album-delay: 0.62s;">
+          <img data-img-key="album9" data-caption-key="albumCaption9" src="" alt="Album 9" class="album-item album-reveal from-right" style="--album-delay: 0.70s;">
+          <img data-img-key="album10" data-caption-key="albumCaption10" src="" alt="Album 10" class="album-item album-reveal from-left" style="--album-delay: 0.78s;">
+        </div>
+      </section>
+
+      <section class="px-6 py-16 bg-white text-reveal reveal">
+        <h2 id="guestbook-title" class="font-script text-7xl text-center text-[#C5A880] reveal text-reveal">Sổ lưu bút</h2>
+        <form id="guestbook-form" class="mt-8 reveal guestbook-panel">
+          <input id="guest-name" type="text" placeholder="Nhập tên của bạn*" class="input-ui mb-3" required>
+          <textarea id="guest-message" rows="4" placeholder="Nhập lời chúc của bạn*" class="input-ui resize-none" required></textarea>
+          <button type="submit" class="w-full mt-3 py-4 rounded-xl bg-[#C5A880] text-white font-semibold tracking-wide">GỬI</button>
+          <button type="button" id="open-rsvp" class="w-full mt-3 py-4 rounded-xl border border-[#C5A880] text-[#C5A880] font-semibold tracking-wide">
+            <i class="fa-regular fa-envelope mr-2"></i> XÁC NHẬN THAM DỰ
+          </button>
+        </form>
+
+        <div id="chat-list" class="mt-5 space-y-3 guestbook-panel !pt-4 chat-wrap"></div>
+        <p id="chat-empty" class="text-center text-sm text-gray-500 mt-4 guestbook-panel !py-6">Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc!</p>
+      </section>
+
+      <footer class="relative py-20 px-6 text-center text-white overflow-hidden text-reveal reveal">
+        <img data-img-key="footer" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" alt="Footer background" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="relative z-10 reveal">
+          <h2 id="footer-title" class="font-script custom-script text-8xl leading-none">Thank you</h2>
+          <p id="footer-message" class="mt-4 text-sm leading-7 font-light">
+            Cảm ơn bạn đã dành tình cảm cho chúng mình!<br>
+            Sự hiện diện của bạn chính là món quà ý nghĩa nhất.
+          </p>
+        </div>
+      </footer>
+    </main>
+
+    <div id="rsvp-modal" class="modal hidden">
+      <div class="modal-card">
+        <button id="close-rsvp" class="absolute right-4 top-4 text-xl text-gray-500" aria-label="Đóng RSVP">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h3 class="text-center font-semibold text-lg mt-2">Xác nhận tham dự</h3>
+        <form id="rsvp-form" class="mt-5">
+          <input id="rsvp-name" type="text" placeholder="Tên của bạn*" class="input-ui mb-3" required>
+          <input id="rsvp-count" type="number" inputmode="numeric" min="1" max="10" placeholder="Số lượng người tham dự*" class="input-ui mb-3" required>
+          <button type="submit" class="w-full py-3 rounded-xl bg-[#C5A880] text-white font-semibold">XÁC NHẬN</button>
+        </form>
+      </div>
+    </div>
+    <div id="album-modal" class="modal hidden album-modal">
+      <div class="album-modal-inner">
+        <img id="album-modal-img" src="" alt="Album zoom">
+        <p id="album-modal-caption"></p>
+      </div>
+    </div>
+    <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>
+  </div>
+  <script src="./text-content.js"></script>
+  <script src="./image-content.js"></script>
+  <script src="./asset-content.js"></script>
+  <script src="./music-content.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
