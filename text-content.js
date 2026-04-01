@@ -1,5 +1,6 @@
 window.WEDDING_TEXT = {
   coupleNames: "Khắc Tín - Yến Nhi",
+  monogram: "T&N",
   weddingDate: "03.05.2026",
   // Dung cho countdown (ISO). Vi du: "2026-05-03T17:00:00+07:00"
   countdownTarget: "2026-05-03T17:00:00+07:00",

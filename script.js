@@ -55,6 +55,7 @@ function applyTextContent() {
 
   const textMap = [
     ["couple-names", text.coupleNames],
+    ["monogram-text", text.monogram],
     ["wedding-date", text.weddingDate],
     ["event-time", text.eventTime],
     ["event-date-text", text.eventDateText],
@@ -257,33 +258,14 @@ function initReveal() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("in-view");
-          albumObserver.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove("in-view");
         }
       });
     },
-    { threshold: 0.18 }
+    { threshold: 0.55, rootMargin: "0px 0px -6% 0px" }
   );
   document.querySelectorAll(".album-reveal").forEach(el => albumObserver.observe(el));
-
-  // Fail-safe: kich hoat album theo thu tu khi toi section
-  const albumSection = document.getElementById("album-section");
-  if (albumSection) {
-    const seqObserver = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const items = Array.from(document.querySelectorAll(".album-reveal"));
-          items.forEach((img, idx) => {
-            const delay = Number.parseFloat((img.style.getPropertyValue("--album-delay") || "").replace("s", "")) || (0.12 * idx);
-            setTimeout(() => img.classList.add("in-view"), Math.round(delay * 1000));
-          });
-          seqObserver.disconnect();
-        });
-      },
-      { threshold: 0.18 }
-    );
-    seqObserver.observe(albumSection);
-  }
 }
 
 function openModal(modalEl) {
