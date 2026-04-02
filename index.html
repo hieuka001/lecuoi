@@ -209,7 +209,10 @@
       </div>
     </div>
     <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>
-    <div id="sync-status" class="sync-status">Chưa cấu hình datasheet</div>
+    <div class="sync-bar" id="sync-bar" aria-label="Trạng thái đồng bộ datasheet">
+      <div id="sync-status" class="sync-status">Chưa cấu hình datasheet</div>
+      <button type="button" id="test-webhook-btn" class="sync-test-btn" title="Gửi một dòng test lên Google Sheet (Guestbook + RSVP)">Test webhook</button>
+    </div>
   </div>
   <script src="./text-content.js"></script>
   <script src="./image-content.js"></script>

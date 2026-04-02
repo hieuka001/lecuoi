@@ -26,6 +26,23 @@ function doPost(e) {
     } else {
       data = JSON.parse(raw || '{}');
     }
+
+    // fallback lay tu parameter neu co
+    if ((!data || !data.type) && e && e.parameter) {
+      const p = e.parameter;
+      if (p.payload) {
+        try {
+          data = JSON.parse(p.payload);
+        } catch (_) {}
+      }
+      data = {
+        ...data,
+        type: data.type || p.type || '',
+        name: data.name || p.name || '',
+        message: data.message || p.message || '',
+        guests: data.guests || p.guests || ''
+      };
+    }
     if (TOKEN && data.token !== TOKEN) {
       return jsonResponse({ ok: false, error: 'invalid_token' }, 401);
     }
@@ -56,6 +73,10 @@ function doPost(e) {
   } catch (err) {
     return jsonResponse({ ok: false, error: String(err) }, 500);
   }
+}
+
+function doGet() {
+  return jsonResponse({ ok: true, message: 'webapp_alive' }, 200);
 }
 
 function jsonResponse(obj, code) {

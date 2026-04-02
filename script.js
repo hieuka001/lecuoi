@@ -22,6 +22,7 @@ const rsvpForm = document.getElementById("rsvp-form");
 const toast = document.getElementById("toast");
 const countdownLabel = document.getElementById("countdown-label");
 const syncStatus = document.getElementById("sync-status");
+const testWebhookBtn = document.getElementById("test-webhook-btn");
 
 let invitationOpened = false;
 let musicPlaying = false;
@@ -395,17 +396,22 @@ function saveRsvp(name, count) {
 async function sendToSheet(payload) {
   const cfg = window.WEDDING_SHEET || {};
   if (!cfg.webhookUrl) return { ok: false, reason: "missing_webhook" };
+  const envelope = {
+    token: cfg.token || "",
+    submittedAt: new Date().toISOString(),
+    ...payload
+  };
   try {
     const res = await fetch(cfg.webhookUrl, {
       method: "POST",
       // Dung form-urlencoded de tranh CORS preflight voi Apps Script
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: new URLSearchParams({
-        payload: JSON.stringify({
-          token: cfg.token || "",
-          submittedAt: new Date().toISOString(),
-          ...payload
-        })
+        payload: JSON.stringify(envelope),
+        type: String(envelope.type || ""),
+        name: String(envelope.name || ""),
+        message: String(envelope.message || ""),
+        guests: String(envelope.guests || "")
       }).toString(),
       redirect: "follow",
       cache: "no-store",
@@ -426,18 +432,28 @@ async function sendToSheet(payload) {
     try {
       const res2 = await fetch(cfg.webhookUrl, {
         method: "POST",
-        body: JSON.stringify({
-          token: cfg.token || "",
-          submittedAt: new Date().toISOString(),
-          ...payload
-        }),
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify(envelope),
         keepalive: true
       });
       const raw2 = await res2.text();
       const ok2 = raw2.includes("\"ok\":true");
       return { ok: Boolean(res2.ok && ok2), reason: ok2 ? "" : "fallback_failed" };
     } catch {
-      return { ok: false, reason: "network_error" };
+      // fallback cuoi: sendBeacon (fire-and-forget)
+      try {
+        const body = new URLSearchParams({
+          payload: JSON.stringify(envelope),
+          type: String(envelope.type || ""),
+          name: String(envelope.name || ""),
+          message: String(envelope.message || ""),
+          guests: String(envelope.guests || "")
+        }).toString();
+        const sent = navigator.sendBeacon(cfg.webhookUrl, new Blob([body], { type: "application/x-www-form-urlencoded;charset=UTF-8" }));
+        return { ok: Boolean(sent), reason: sent ? "" : "network_error" };
+      } catch {
+        return { ok: false, reason: "network_error" };
+      }
     }
   }
 }
@@ -489,6 +505,59 @@ setInterval(() => {
     flushSheetQueue();
   }
 }, 15000);
+
+function submitSheetWithQueue(payload, successMsg) {
+  sendToSheet(payload).then(result => {
+    if (!result.ok) {
+      enqueueSheetPayload(payload);
+      showToast(`Đã lưu cục bộ (${result.reason || "pending"}), sẽ tự đồng bộ datasheet`);
+    } else {
+      setSyncStatus(successMsg, "ok");
+      // flush ngay neu con hang doi de day nhanh
+      if (loadSheetQueue().length > 0) {
+        flushSheetQueue();
+      }
+    }
+  });
+}
+
+/** Gửi 2 dòng test (Guestbook + RSVP), không đưa vào hàng đợi — chỉ để kiểm tra endpoint. */
+async function runWebhookTest() {
+  const cfg = window.WEDDING_SHEET || {};
+  if (!cfg.webhookUrl) {
+    setSyncStatus("Chưa cấu hình webhook datasheet", "err");
+    showToast("Thiếu webhookUrl trong sheet-content.js");
+    return;
+  }
+  if (testWebhookBtn) testWebhookBtn.disabled = true;
+  const stamp = new Date().toISOString();
+  setSyncStatus("Đang test webhook…", "warn");
+
+  const gb = await sendToSheet({
+    type: "guestbook",
+    name: "Webhook Test",
+    message: `Kiểm tra kết nối · ${stamp}`
+  });
+  const rsvp = await sendToSheet({
+    type: "rsvp",
+    name: "Webhook Test · RSVP",
+    guests: 1
+  });
+
+  if (testWebhookBtn) testWebhookBtn.disabled = false;
+
+  if (gb.ok && rsvp.ok) {
+    setSyncStatus("Test webhook OK — mở Sheet tab Guestbook & RSVP", "ok");
+    showToast("Đã ghi 2 dòng test lên Sheet");
+    if (loadSheetQueue().length > 0) flushSheetQueue();
+  } else {
+    const bits = [];
+    if (!gb.ok) bits.push(`Guestbook (${gb.reason || "lỗi"})`);
+    if (!rsvp.ok) bits.push(`RSVP (${rsvp.reason || "lỗi"})`);
+    setSyncStatus(`Test thất bại: ${bits.join(" · ")}`, "err");
+    showToast("Test webhook thất bại — mở DevTools → Network");
+  }
+}
 
 function initPetals() {
   const canvas = document.getElementById("petal-canvas");
@@ -718,6 +787,9 @@ window.addEventListener("load", () => {
     setSyncStatus("Sẵn sàng đồng bộ datasheet", "ok");
     flushSheetQueue();
   }
+  if (testWebhookBtn) {
+    testWebhookBtn.addEventListener("click", () => runWebhookTest());
+  }
 });
 
 window.addEventListener("online", () => {
@@ -763,23 +835,11 @@ guestbookForm.addEventListener("submit", e => {
   guestMessage.value = "";
   showToast("Đã gửi lời chúc thành công");
 
-  sendToSheet({
+  submitSheetWithQueue({
     type: "guestbook",
     name,
     message
-  }).then(result => {
-    if (!result.ok) {
-      enqueueSheetPayload({
-        type: "guestbook",
-        name,
-        message
-      });
-      showToast("Đã lưu cục bộ, sẽ tự đồng bộ datasheet");
-      setSyncStatus(`Chờ đồng bộ ${loadSheetQueue().length} mục`, "warn");
-    } else {
-      setSyncStatus("Đã gửi lời chúc lên datasheet", "ok");
-    }
-  });
+  }, "Đã gửi lời chúc lên datasheet");
 });
 
 rsvpForm.addEventListener("submit", e => {
@@ -795,21 +855,9 @@ rsvpForm.addEventListener("submit", e => {
   closeModal(rsvpModal);
   showToast(`Cảm ơn ${name}, đã ghi nhận ${count} khách`);
 
-  sendToSheet({
+  submitSheetWithQueue({
     type: "rsvp",
     name,
     guests: Number(count)
-  }).then(result => {
-    if (!result.ok) {
-      enqueueSheetPayload({
-        type: "rsvp",
-        name,
-        guests: Number(count)
-      });
-      showToast("Đã lưu RSVP cục bộ, sẽ tự đồng bộ datasheet");
-      setSyncStatus(`Chờ đồng bộ ${loadSheetQueue().length} mục`, "warn");
-    } else {
-      setSyncStatus("Đã gửi RSVP lên datasheet", "ok");
-    }
-  });
+  }, "Đã gửi RSVP lên datasheet");
 });
