@@ -406,12 +406,9 @@ async function sendToSheet(payload) {
       method: "POST",
       // Dung form-urlencoded de tranh CORS preflight voi Apps Script
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      // Chi gui payload= (JSON) — tranh body dang payload&type&... lam server parse sai
       body: new URLSearchParams({
-        payload: JSON.stringify(envelope),
-        type: String(envelope.type || ""),
-        name: String(envelope.name || ""),
-        message: String(envelope.message || ""),
-        guests: String(envelope.guests || "")
+        payload: JSON.stringify(envelope)
       }).toString(),
       redirect: "follow",
       cache: "no-store",
@@ -443,11 +440,7 @@ async function sendToSheet(payload) {
       // fallback cuoi: sendBeacon (fire-and-forget)
       try {
         const body = new URLSearchParams({
-          payload: JSON.stringify(envelope),
-          type: String(envelope.type || ""),
-          name: String(envelope.name || ""),
-          message: String(envelope.message || ""),
-          guests: String(envelope.guests || "")
+          payload: JSON.stringify(envelope)
         }).toString();
         const sent = navigator.sendBeacon(cfg.webhookUrl, new Blob([body], { type: "application/x-www-form-urlencoded;charset=UTF-8" }));
         return { ok: Boolean(sent), reason: sent ? "" : "network_error" };

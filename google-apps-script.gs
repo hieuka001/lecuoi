@@ -12,37 +12,59 @@
 
 const TOKEN = ''; // dat giong sheet-content.js neu dung xac thuc
 
+/** Lay gia tri mot key trong body application/x-www-form-urlencoded (payload co the khong dung dau chuoi). */
+function extractUrlEncodedValue_(qs, key) {
+  if (!qs) return null;
+  var parts = String(qs).split('&');
+  for (var i = 0; i < parts.length; i++) {
+    var eq = parts[i].indexOf('=');
+    if (eq < 0) continue;
+    var k = decodeURIComponent(parts[i].substring(0, eq).replace(/\+/g, ' '));
+    if (k === key) {
+      return decodeURIComponent(parts[i].substring(eq + 1).replace(/\+/g, ' '));
+    }
+  }
+  return null;
+}
+
 function doPost(e) {
   try {
-    const raw = (e && e.postData && e.postData.contents) ? e.postData.contents : '{}';
-    let data = {};
+    var p = (e && e.parameter) ? e.parameter : {};
+    var raw = (e && e.postData && e.postData.contents) ? String(e.postData.contents).trim() : '';
+    var data = {};
 
-    // Ho tro ca 2 kieu gui:
-    // 1) JSON thang
-    // 2) form-urlencoded: payload=<json>
-    if (raw.indexOf('payload=') === 0) {
-      const decoded = decodeURIComponent(raw.replace(/^payload=/, '').replace(/\+/g, ' '));
-      data = JSON.parse(decoded || '{}');
-    } else {
-      data = JSON.parse(raw || '{}');
-    }
-
-    // fallback lay tu parameter neu co
-    if ((!data || !data.type) && e && e.parameter) {
-      const p = e.parameter;
-      if (p.payload) {
-        try {
-          data = JSON.parse(p.payload);
-        } catch (_) {}
+    // 1) Google Apps Script parse san urlencoded -> e.parameter.payload (uu tien)
+    // 2) Hoac tach dung gia tri payload=... (khong duoc JSON.parse ca chuoi "payload=...&type=...")
+    if (p.payload) {
+      try {
+        data = JSON.parse(p.payload);
+      } catch (err) {
+        return jsonResponse({ ok: false, error: 'bad_payload_json' }, 400);
       }
-      data = {
-        ...data,
-        type: data.type || p.type || '',
-        name: data.name || p.name || '',
-        message: data.message || p.message || '',
-        guests: data.guests || p.guests || ''
-      };
+    } else {
+      var payloadStr = extractUrlEncodedValue_(raw, 'payload');
+      if (payloadStr !== null) {
+        try {
+          data = JSON.parse(payloadStr || '{}');
+        } catch (err) {
+          return jsonResponse({ ok: false, error: 'bad_payload_json' }, 400);
+        }
+      } else if (raw && raw.charAt(0) === '{') {
+        try {
+          data = JSON.parse(raw);
+        } catch (err) {
+          return jsonResponse({ ok: false, error: 'bad_json' }, 400);
+        }
+      }
     }
+
+    data = Object.assign({}, data, {
+      type: (data && data.type) || p.type || '',
+      name: (data && data.name) || p.name || '',
+      message: (data && data.message) || p.message || '',
+      guests: (data && data.guests !== undefined && data.guests !== '') ? data.guests : (p.guests || ''),
+      token: (data && data.token) || p.token || ''
+    });
     if (TOKEN && data.token !== TOKEN) {
       return jsonResponse({ ok: false, error: 'invalid_token' }, 401);
     }
