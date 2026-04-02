@@ -13,6 +13,7 @@ window.WEDDING_TEXT = {
   groomFamily: "Ông Hồ Ngọc Cẩn<br>Bà Trần Thị Ngọc Linh",
   venueName: "Nhà Hàng Bá Hùng",
   venueAddress: "Số 58 đường Nguyễn Chí Thanh, Phước Nguyễn, Bà Rịa, Hồ Chí Minh",
+  mapLink: "https://maps.app.goo.gl/yDk8pDZEdzDnJLib8",
   timelineDate: "03 . 05 . 2026",
   giftTitle: "Hộp mừng cưới",
   giftSubtitle: "Cảm ơn tình cảm của mọi người đã dành cho chúng mình!",

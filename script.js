@@ -26,6 +26,7 @@ let invitationOpened = false;
 let musicPlaying = false;
 const STORAGE_MESSAGES = "wedding_guestbook_messages";
 const STORAGE_RSVP = "wedding_rsvp_entries";
+const STORAGE_SHEET_QUEUE = "wedding_sheet_queue";
 const MONTH_VI = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
 
 function getTargetDate() {
@@ -69,6 +70,11 @@ function applyTextContent() {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
   });
+
+  if (text.mapLink) {
+    const mapEl = document.getElementById("map-link");
+    if (mapEl) mapEl.href = text.mapLink;
+  }
 }
 
 function buildCalendar() {
@@ -378,6 +384,58 @@ function saveRsvp(name, count) {
   localStorage.setItem(STORAGE_RSVP, JSON.stringify(list.slice(0, 100)));
 }
 
+async function sendToSheet(payload) {
+  const cfg = window.WEDDING_SHEET || {};
+  if (!cfg.webhookUrl) return false;
+  try {
+    const res = await fetch(cfg.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: cfg.token || "",
+        submittedAt: new Date().toISOString(),
+        ...payload
+      }),
+      keepalive: true
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function loadSheetQueue() {
+  try {
+    const raw = localStorage.getItem(STORAGE_SHEET_QUEUE);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveSheetQueue(items) {
+  localStorage.setItem(STORAGE_SHEET_QUEUE, JSON.stringify(items.slice(0, 150)));
+}
+
+function enqueueSheetPayload(payload) {
+  const queue = loadSheetQueue();
+  queue.push({ ...payload, queuedAt: Date.now() });
+  saveSheetQueue(queue);
+}
+
+async function flushSheetQueue() {
+  const queue = loadSheetQueue();
+  if (!queue.length) return;
+
+  const remain = [];
+  for (const item of queue) {
+    // eslint-disable-next-line no-await-in-loop
+    const ok = await sendToSheet(item);
+    if (!ok) remain.push(item);
+  }
+  saveSheetQueue(remain);
+}
+
 function initPetals() {
   const canvas = document.getElementById("petal-canvas");
   const ctx = canvas.getContext("2d");
@@ -599,6 +657,11 @@ window.addEventListener("load", () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
   renderMessages();
+  flushSheetQueue();
+});
+
+window.addEventListener("online", () => {
+  flushSheetQueue();
 });
 
 sealBtn.addEventListener("click", openInvitation);
@@ -639,6 +702,21 @@ guestbookForm.addEventListener("submit", e => {
   guestName.value = "";
   guestMessage.value = "";
   showToast("Đã gửi lời chúc thành công");
+
+  sendToSheet({
+    type: "guestbook",
+    name,
+    message
+  }).then(ok => {
+    if (!ok) {
+      enqueueSheetPayload({
+        type: "guestbook",
+        name,
+        message
+      });
+      showToast("Đã lưu cục bộ, sẽ tự đồng bộ datasheet");
+    }
+  });
 });
 
 rsvpForm.addEventListener("submit", e => {
@@ -653,4 +731,19 @@ rsvpForm.addEventListener("submit", e => {
   rsvpForm.reset();
   closeModal(rsvpModal);
   showToast(`Cảm ơn ${name}, đã ghi nhận ${count} khách`);
+
+  sendToSheet({
+    type: "rsvp",
+    name,
+    guests: Number(count)
+  }).then(ok => {
+    if (!ok) {
+      enqueueSheetPayload({
+        type: "rsvp",
+        name,
+        guests: Number(count)
+      });
+      showToast("Đã lưu RSVP cục bộ, sẽ tự đồng bộ datasheet");
+    }
+  });
 });
