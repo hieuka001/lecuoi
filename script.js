@@ -398,26 +398,47 @@ async function sendToSheet(payload) {
   try {
     const res = await fetch(cfg.webhookUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token: cfg.token || "",
-        submittedAt: new Date().toISOString(),
-        ...payload
-      }),
+      // Dung form-urlencoded de tranh CORS preflight voi Apps Script
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: new URLSearchParams({
+        payload: JSON.stringify({
+          token: cfg.token || "",
+          submittedAt: new Date().toISOString(),
+          ...payload
+        })
+      }).toString(),
+      redirect: "follow",
+      cache: "no-store",
       keepalive: true
     });
 
-    // Apps Script thường trả JSON body; kiểm tra cả HTTP lẫn body.ok
+    const raw = await res.text();
     let body = null;
     try {
-      body = await res.json();
+      body = raw ? JSON.parse(raw) : null;
     } catch {
       body = null;
     }
-    const bodyOk = body && typeof body.ok === "boolean" ? body.ok : true;
-    return { ok: res.ok && bodyOk, reason: body && body.error ? body.error : "" };
+    const bodyOk = body && typeof body.ok === "boolean" ? body.ok : (typeof raw === "string" && raw.includes("\"ok\":true"));
+    return { ok: Boolean(res.ok && bodyOk), reason: body && body.error ? body.error : (bodyOk ? "" : "unknown_response") };
   } catch {
-    return { ok: false, reason: "network_error" };
+    // fallback gui text/plain
+    try {
+      const res2 = await fetch(cfg.webhookUrl, {
+        method: "POST",
+        body: JSON.stringify({
+          token: cfg.token || "",
+          submittedAt: new Date().toISOString(),
+          ...payload
+        }),
+        keepalive: true
+      });
+      const raw2 = await res2.text();
+      const ok2 = raw2.includes("\"ok\":true");
+      return { ok: Boolean(res2.ok && ok2), reason: ok2 ? "" : "fallback_failed" };
+    } catch {
+      return { ok: false, reason: "network_error" };
+    }
   }
 }
 
@@ -438,11 +459,15 @@ function enqueueSheetPayload(payload) {
   const queue = loadSheetQueue();
   queue.push({ ...payload, queuedAt: Date.now() });
   saveSheetQueue(queue);
+  setSyncStatus(`Chờ đồng bộ ${queue.length} mục`, "warn");
 }
 
 async function flushSheetQueue() {
   const queue = loadSheetQueue();
-  if (!queue.length) return;
+  if (!queue.length) {
+    setSyncStatus("Đồng bộ datasheet thành công", "ok");
+    return;
+  }
 
   setSyncStatus(`Đang đồng bộ ${queue.length} mục...`, "warn");
   const remain = [];
@@ -458,6 +483,12 @@ async function flushSheetQueue() {
     setSyncStatus("Đồng bộ datasheet thành công", "ok");
   }
 }
+
+setInterval(() => {
+  if (navigator.onLine && loadSheetQueue().length > 0) {
+    flushSheetQueue();
+  }
+}, 15000);
 
 function initPetals() {
   const canvas = document.getElementById("petal-canvas");

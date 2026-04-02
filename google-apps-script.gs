@@ -14,7 +14,18 @@ const TOKEN = ''; // dat giong sheet-content.js neu dung xac thuc
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents || '{}');
+    const raw = (e && e.postData && e.postData.contents) ? e.postData.contents : '{}';
+    let data = {};
+
+    // Ho tro ca 2 kieu gui:
+    // 1) JSON thang
+    // 2) form-urlencoded: payload=<json>
+    if (raw.indexOf('payload=') === 0) {
+      const decoded = decodeURIComponent(raw.replace(/^payload=/, '').replace(/\+/g, ' '));
+      data = JSON.parse(decoded || '{}');
+    } else {
+      data = JSON.parse(raw || '{}');
+    }
     if (TOKEN && data.token !== TOKEN) {
       return jsonResponse({ ok: false, error: 'invalid_token' }, 401);
     }
