@@ -97,8 +97,41 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return jsonResponse({ ok: true, message: 'webapp_alive' }, 200);
+function doGet(e) {
+  try {
+    var p = (e && e.parameter) ? e.parameter : {};
+    if (TOKEN && p.token !== TOKEN) {
+      return jsonResponse({ ok: false, error: 'invalid_token' }, 401);
+    }
+    if (p.action === 'guestbook') {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sh = ss.getSheetByName('Guestbook');
+      if (!sh || sh.getLastRow() < 2) {
+        return jsonResponse({ ok: true, entries: [] }, 200);
+      }
+      var last = sh.getLastRow();
+      var vals = sh.getRange(2, 1, last, 3).getValues();
+      var entries = [];
+      for (var i = 0; i < vals.length; i++) {
+        var cellAt = vals[i][0];
+        var atStr = '';
+        if (Object.prototype.toString.call(cellAt) === '[object Date]') {
+          atStr = cellAt.toISOString ? cellAt.toISOString() : String(cellAt);
+        } else {
+          atStr = String(cellAt || '');
+        }
+        entries.push({
+          submittedAt: atStr,
+          name: String(vals[i][1] || ''),
+          message: String(vals[i][2] || '')
+        });
+      }
+      return jsonResponse({ ok: true, entries: entries }, 200);
+    }
+    return jsonResponse({ ok: true, message: 'webapp_alive' }, 200);
+  } catch (err) {
+    return jsonResponse({ ok: false, error: String(err) }, 500);
+  }
 }
 
 function jsonResponse(obj, code) {

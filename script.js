@@ -359,16 +359,94 @@ function loadMessages() {
 }
 
 function renderMessages() {
-  chatList.innerHTML = "";
   const messages = loadMessages();
+  renderChatFromMessages(messages);
+}
+
+/** Hien thi danh sach len khu chat (tu Sheet hoac local). Thu tu: cu -> moi, bubble moi nhat o tren. */
+function renderChatFromMessages(messages) {
+  chatList.innerHTML = "";
   if (!messages.length) {
     chatEmpty.style.display = "block";
     return;
   }
-
   chatEmpty.style.display = "none";
-
   messages.forEach(item => appendChatBubble(item.name, item.message, false));
+}
+
+function sheetRowsToMessages(entries) {
+  return entries
+    .map(row => {
+      const at = row.submittedAt ? Date.parse(row.submittedAt) : NaN;
+      return {
+        name: String(row.name || "").trim(),
+        message: String(row.message || "").trim(),
+        at: Number.isNaN(at) ? Date.now() : at
+      };
+    })
+    .filter(m => m.name && m.message);
+}
+
+async function fetchGuestbookFromSheet() {
+  const cfg = window.WEDDING_SHEET || {};
+  if (!cfg.webhookUrl) return { ok: false, entries: null, reason: "missing_webhook" };
+  try {
+    const url = new URL(cfg.webhookUrl);
+    url.searchParams.set("action", "guestbook");
+    if (cfg.token) url.searchParams.set("token", cfg.token);
+    const res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
+    const raw = await res.text();
+    let body = null;
+    try {
+      body = raw ? JSON.parse(raw) : null;
+    } catch {
+      body = null;
+    }
+    const ok = Boolean(res.ok && body && body.ok === true && Array.isArray(body.entries));
+    return {
+      ok,
+      entries: ok ? body.entries : [],
+      reason: ok ? "" : (body && body.error) || "bad_response"
+    };
+  } catch {
+    return { ok: false, entries: null, reason: "network_error" };
+  }
+}
+
+async function refreshGuestbookFromSheet() {
+  const cfg = window.WEDDING_SHEET || {};
+  if (!cfg.webhookUrl) return;
+  const res = await fetchGuestbookFromSheet();
+  if (!res.ok || !Array.isArray(res.entries)) return;
+  const msgs = sheetRowsToMessages(res.entries);
+  storeMessages(msgs.slice(0, 40));
+  renderChatFromMessages(msgs);
+}
+
+async function initGuestbookDisplay() {
+  const cfg = window.WEDDING_SHEET || {};
+  if (cfg.webhookUrl) {
+    const res = await fetchGuestbookFromSheet();
+    if (res.ok && Array.isArray(res.entries) && res.entries.length) {
+      const msgs = sheetRowsToMessages(res.entries);
+      storeMessages(msgs.slice(0, 40));
+      renderChatFromMessages(msgs);
+      return;
+    }
+    if (res.ok && (!res.entries || !res.entries.length)) {
+      renderChatFromMessages([]);
+      return;
+    }
+    const local = loadMessages();
+    if (local.length) {
+      renderChatFromMessages(local);
+      return;
+    }
+    renderChatFromMessages([]);
+    return;
+  }
+  if (!loadMessages().length) seedMessagesIfEmpty();
+  renderMessages();
 }
 
 function seedMessagesIfEmpty() {
@@ -490,6 +568,7 @@ async function flushSheetQueue() {
     setSyncStatus(`Chờ đồng bộ ${remain.length} mục`, "warn");
   } else {
     setSyncStatus("Đồng bộ datasheet thành công", "ok");
+    await refreshGuestbookFromSheet();
   }
 }
 
@@ -500,15 +579,17 @@ setInterval(() => {
 }, 15000);
 
 function submitSheetWithQueue(payload, successMsg) {
-  sendToSheet(payload).then(result => {
+  sendToSheet(payload).then(async result => {
     if (!result.ok) {
       enqueueSheetPayload(payload);
       showToast(`Đã lưu cục bộ (${result.reason || "pending"}), sẽ tự đồng bộ datasheet`);
     } else {
       setSyncStatus(successMsg, "ok");
-      // flush ngay neu con hang doi de day nhanh
       if (loadSheetQueue().length > 0) {
-        flushSheetQueue();
+        await flushSheetQueue();
+      }
+      if (payload.type === "guestbook") {
+        await refreshGuestbookFromSheet();
       }
     }
   });
@@ -542,7 +623,8 @@ async function runWebhookTest() {
   if (gb.ok && rsvp.ok) {
     setSyncStatus("Test webhook OK — mở Sheet tab Guestbook & RSVP", "ok");
     showToast("Đã ghi 2 dòng test lên Sheet");
-    if (loadSheetQueue().length > 0) flushSheetQueue();
+    if (loadSheetQueue().length > 0) await flushSheetQueue();
+    await refreshGuestbookFromSheet();
   } else {
     const bits = [];
     if (!gb.ok) bits.push(`Guestbook (${gb.reason || "lỗi"})`);
@@ -769,10 +851,9 @@ window.addEventListener("load", () => {
   initReveal();
   initAlbumModal();
   initPetals();
-  seedMessagesIfEmpty();
   updateCountdown();
   setInterval(updateCountdown, 1000);
-  renderMessages();
+  void initGuestbookDisplay();
   const cfg = window.WEDDING_SHEET || {};
   if (!cfg.webhookUrl) {
     setSyncStatus("Chưa cấu hình webhook datasheet", "err");
