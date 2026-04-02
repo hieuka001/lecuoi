@@ -463,6 +463,7 @@ img {
   max-width: 420px;
   width: 100%;
   text-align: center;
+  padding: 6px 0;
 }
 .album-modal-inner img {
   width: 100%;
@@ -471,12 +472,47 @@ img {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
-.album-modal-inner p {
-  color: #fff;
+.album-caption-shell {
   margin-top: 14px;
-  font-size: 14px;
-  line-height: 1.6;
-  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.album-caption-deco {
+  width: 140px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.9), transparent);
+}
+.album-caption-text {
+  color: #6b4c1d;
+  font-family: var(--script-alt);
+  font-size: clamp(16px, 4.2vw, 20px);
+  line-height: 1.35;
+  background: rgba(253, 251, 247, 0.92);
+  border: 1px solid rgba(197, 168, 128, 0.55);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  max-width: 92%;
+}
+
+.modal.album-modal.is-open .album-modal-inner {
+  animation: albumModalZoomIn 0.25s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+@keyframes albumModalZoomIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.975);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 .gift-box {

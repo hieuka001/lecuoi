@@ -33,7 +33,7 @@
       </button>
     </div>
 
-    <audio id="bg-audio" loop preload="none" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <audio id="bg-audio" loop preload="auto" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
     <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
       <button id="fab-music" class="fab bg-gray-500" aria-label="Bật tắt nhạc">
@@ -198,10 +198,14 @@
         </form>
       </div>
     </div>
-    <div id="album-modal" class="modal hidden album-modal">
+    <div id="album-modal" class="modal hidden album-modal" role="dialog" aria-modal="true">
       <div class="album-modal-inner">
         <img id="album-modal-img" src="" alt="Album zoom">
-        <p id="album-modal-caption"></p>
+        <div class="album-caption-shell">
+          <div class="album-caption-deco"></div>
+          <p id="album-modal-caption" class="album-caption-text"></p>
+          <div class="album-caption-deco"></div>
+        </div>
       </div>
     </div>
     <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>

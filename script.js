@@ -148,19 +148,28 @@ function openInvitation() {
   if (invitationOpened) return;
   invitationOpened = true;
 
+  // Bắt đầu nhạc ngay khi user bấm mở thiệp để khớp animation
+  playMusic();
+
   sealBtn.classList.add("hide");
   envelope.classList.add("open");
 
   setTimeout(() => {
     envelope.style.display = "none";
   }, 1100);
-
-  playMusic();
 }
 
 function autoOpenEnvelope() {
   setTimeout(() => {
-    openInvitation();
+    // Auto-open có thể bị chặn autoplay; không ép bật nhạc
+    if (!invitationOpened) {
+      sealBtn.classList.add("hide");
+      envelope.classList.add("open");
+      setTimeout(() => {
+        envelope.style.display = "none";
+      }, 1100);
+      invitationOpened = true;
+    }
   }, 2000);
 }
 
@@ -172,6 +181,12 @@ function playMusic() {
   if (typeof musicCfg.volume === "number") {
     bgAudio.volume = Math.min(1, Math.max(0, musicCfg.volume));
   }
+
+  // preload nhanh hơn trước khi gọi play
+  try {
+    bgAudio.load();
+  } catch {}
+
   bgAudio.play()
     .then(() => {
       musicPlaying = true;
@@ -270,11 +285,13 @@ function initReveal() {
 
 function openModal(modalEl) {
   modalEl.classList.remove("hidden");
+  modalEl.classList.add("is-open");
   document.body.style.overflow = "hidden";
 }
 
 function closeModal(modalEl) {
   modalEl.classList.add("hidden");
+  modalEl.classList.remove("is-open");
   const anyOpen = !rsvpModal.classList.contains("hidden") || !albumModal.classList.contains("hidden");
   if (!anyOpen) {
     document.body.style.overflow = "";
@@ -570,6 +587,10 @@ window.addEventListener("load", () => {
   applyImageContent();
   applyAssetContent();
   buildCalendar();
+  // Warm-up audio to load nhanh hơn cho lần mở thiệp sau
+  try {
+    bgAudio.load();
+  } catch {}
   hidePreloader();
   initReveal();
   initAlbumModal();
