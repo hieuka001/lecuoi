@@ -21,6 +21,7 @@ const albumModalCaption = document.getElementById("album-modal-caption");
 const rsvpForm = document.getElementById("rsvp-form");
 const toast = document.getElementById("toast");
 const countdownLabel = document.getElementById("countdown-label");
+const syncStatus = document.getElementById("sync-status");
 
 let invitationOpened = false;
 let musicPlaying = false;
@@ -314,6 +315,13 @@ function showToast(message) {
   }, 1800);
 }
 
+function setSyncStatus(message, tone = "") {
+  if (!syncStatus) return;
+  syncStatus.textContent = message;
+  syncStatus.classList.remove("ok", "warn", "err");
+  if (tone) syncStatus.classList.add(tone);
+}
+
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
@@ -386,7 +394,7 @@ function saveRsvp(name, count) {
 
 async function sendToSheet(payload) {
   const cfg = window.WEDDING_SHEET || {};
-  if (!cfg.webhookUrl) return false;
+  if (!cfg.webhookUrl) return { ok: false, reason: "missing_webhook" };
   try {
     const res = await fetch(cfg.webhookUrl, {
       method: "POST",
@@ -398,9 +406,18 @@ async function sendToSheet(payload) {
       }),
       keepalive: true
     });
-    return res.ok;
+
+    // Apps Script thường trả JSON body; kiểm tra cả HTTP lẫn body.ok
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    const bodyOk = body && typeof body.ok === "boolean" ? body.ok : true;
+    return { ok: res.ok && bodyOk, reason: body && body.error ? body.error : "" };
   } catch {
-    return false;
+    return { ok: false, reason: "network_error" };
   }
 }
 
@@ -427,13 +444,19 @@ async function flushSheetQueue() {
   const queue = loadSheetQueue();
   if (!queue.length) return;
 
+  setSyncStatus(`Đang đồng bộ ${queue.length} mục...`, "warn");
   const remain = [];
   for (const item of queue) {
     // eslint-disable-next-line no-await-in-loop
-    const ok = await sendToSheet(item);
-    if (!ok) remain.push(item);
+    const result = await sendToSheet(item);
+    if (!result.ok) remain.push(item);
   }
   saveSheetQueue(remain);
+  if (remain.length) {
+    setSyncStatus(`Chờ đồng bộ ${remain.length} mục`, "warn");
+  } else {
+    setSyncStatus("Đồng bộ datasheet thành công", "ok");
+  }
 }
 
 function initPetals() {
@@ -657,7 +680,13 @@ window.addEventListener("load", () => {
   updateCountdown();
   setInterval(updateCountdown, 1000);
   renderMessages();
-  flushSheetQueue();
+  const cfg = window.WEDDING_SHEET || {};
+  if (!cfg.webhookUrl) {
+    setSyncStatus("Chưa cấu hình webhook datasheet", "err");
+  } else {
+    setSyncStatus("Sẵn sàng đồng bộ datasheet", "ok");
+    flushSheetQueue();
+  }
 });
 
 window.addEventListener("online", () => {
@@ -707,14 +736,17 @@ guestbookForm.addEventListener("submit", e => {
     type: "guestbook",
     name,
     message
-  }).then(ok => {
-    if (!ok) {
+  }).then(result => {
+    if (!result.ok) {
       enqueueSheetPayload({
         type: "guestbook",
         name,
         message
       });
       showToast("Đã lưu cục bộ, sẽ tự đồng bộ datasheet");
+      setSyncStatus(`Chờ đồng bộ ${loadSheetQueue().length} mục`, "warn");
+    } else {
+      setSyncStatus("Đã gửi lời chúc lên datasheet", "ok");
     }
   });
 });
@@ -736,14 +768,17 @@ rsvpForm.addEventListener("submit", e => {
     type: "rsvp",
     name,
     guests: Number(count)
-  }).then(ok => {
-    if (!ok) {
+  }).then(result => {
+    if (!result.ok) {
       enqueueSheetPayload({
         type: "rsvp",
         name,
         guests: Number(count)
       });
       showToast("Đã lưu RSVP cục bộ, sẽ tự đồng bộ datasheet");
+      setSyncStatus(`Chờ đồng bộ ${loadSheetQueue().length} mục`, "warn");
+    } else {
+      setSyncStatus("Đã gửi RSVP lên datasheet", "ok");
     }
   });
 });
