@@ -105,8 +105,8 @@
         </div>
 
         <p id="countdown-label" class="mt-10 text-xs text-gray-600 tracking-wide reveal">We'll be sharing a home and a life together in</p>
-        <div class="countdown reveal">
-          <div id="days">000</div><span>:</span><div id="hours">00</div><span>:</span><div id="mins">00</div><span>:</span><div id="secs">00</div>
+        <div class="countdown reveal" aria-live="polite">
+          <div id="days" class="cd-unit">000</div><span class="cd-sep" aria-hidden="true">:</span><div id="hours" class="cd-unit">00</div><span class="cd-sep" aria-hidden="true">:</span><div id="mins" class="cd-unit">00</div><span class="cd-sep" aria-hidden="true">:</span><div id="secs" class="cd-unit">00</div>
         </div>
       </section>
 
@@ -207,6 +207,9 @@
           <div class="album-caption-deco"></div>
         </div>
       </div>
+    </div>
+    <div id="ceremony-message" class="ceremony-message" role="status" aria-live="polite">
+      <p id="ceremony-message-text" class="ceremony-message-text"></p>
     </div>
     <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>
     <div class="sync-bar" id="sync-bar" aria-label="Trạng thái đồng bộ datasheet">

@@ -323,17 +323,71 @@ body {
   margin-top: 12px;
   display: flex;
   justify-content: center;
-  align-items: baseline;
-  gap: 8px;
-  font-family: var(--serif);
-  font-size: 44px;
-  font-weight: 600;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--sans);
 }
 
-.countdown span {
+.countdown .cd-unit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5ch;
+  font-size: 2.35rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--dark);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.countdown #days {
+  min-width: 3.1ch;
+}
+
+.countdown .cd-sep {
   color: var(--gold);
-  font-size: 30px;
-  font-weight: 300;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0 3px;
+  align-self: center;
+  font-family: var(--sans);
+}
+
+.ceremony-message {
+  position: fixed;
+  left: 50%;
+  bottom: max(18%, 100px);
+  transform: translate3d(-50%, 16px, 0);
+  width: min(92%, 340px);
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.55s;
+}
+
+.ceremony-message.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(-50%, 0, 0);
+  transition: opacity 0.55s ease, transform 0.55s ease, visibility 0s;
+}
+
+.ceremony-message-text {
+  font-family: var(--script);
+  font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+  line-height: 1.5;
+  color: #3d2f24;
+  text-align: center;
+  margin: 0;
+  padding: 1rem 1.15rem;
+  background: rgba(255, 252, 248, 0.97);
+  border-radius: 1.1rem;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(197, 168, 128, 0.5);
+  letter-spacing: 0.02em;
 }
 
 .timeline-list {
@@ -736,7 +790,7 @@ img {
   left: 12px;
   bottom: 16px;
   z-index: 130;
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;

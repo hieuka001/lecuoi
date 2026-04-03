@@ -18,6 +18,10 @@ window.WEDDING_TEXT = {
   giftTitle: "Hộp mừng cưới",
   giftSubtitle: "Cảm ơn tình cảm của mọi người đã dành cho chúng mình!",
   guestbookTitle: "Sổ lưu bút",
+  guestbookThankYouMessage:
+    "Cảm ơn lời chúc tốt đẹp từ bạn đến cô dâu và chú rể.",
+  rsvpThankYouMessage:
+    "Sự hiện diện của bạn sẽ là niềm vinh hạnh cho gia đình chúng tôi.",
   footerTitle: "Thank you",
   footerMessage: "Cảm ơn bạn đã dành tình cảm cho chúng mình!<br>Sự hiện diện của bạn chính là món quà ý nghĩa nhất.",
   albumCaption1: "Khoảnh khắc đầu tiên khi mình nhìn về nhau.",

@@ -23,6 +23,8 @@ const toast = document.getElementById("toast");
 const countdownLabel = document.getElementById("countdown-label");
 const syncStatus = document.getElementById("sync-status");
 const testWebhookBtn = document.getElementById("test-webhook-btn");
+const ceremonyMessage = document.getElementById("ceremony-message");
+const ceremonyMessageText = document.getElementById("ceremony-message-text");
 
 let invitationOpened = false;
 let musicPlaying = false;
@@ -307,6 +309,7 @@ function closeModal(modalEl) {
 }
 
 let toastTimer = null;
+let ceremonyTimer = null;
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
@@ -314,6 +317,19 @@ function showToast(message) {
   toastTimer = setTimeout(() => {
     toast.classList.remove("show");
   }, 1800);
+}
+
+/** Thong diep cam on kieu chu bay, ~4s roi bien mat */
+function showCeremonyMessage(message) {
+  if (!ceremonyMessage || !ceremonyMessageText || !message) return;
+  ceremonyMessageText.textContent = message;
+  ceremonyMessage.classList.remove("show");
+  void ceremonyMessage.offsetWidth;
+  ceremonyMessage.classList.add("show");
+  clearTimeout(ceremonyTimer);
+  ceremonyTimer = setTimeout(() => {
+    ceremonyMessage.classList.remove("show");
+  }, 4000);
 }
 
 function setSyncStatus(message, tone = "") {
@@ -907,7 +923,11 @@ guestbookForm.addEventListener("submit", e => {
 
   guestName.value = "";
   guestMessage.value = "";
-  showToast("Đã gửi lời chúc thành công");
+  const t = window.WEDDING_TEXT || {};
+  showCeremonyMessage(
+    t.guestbookThankYouMessage ||
+      "Cảm ơn lời chúc tốt đẹp từ bạn đến cô dâu và chú rể."
+  );
 
   submitSheetWithQueue({
     type: "guestbook",
@@ -927,7 +947,11 @@ rsvpForm.addEventListener("submit", e => {
   saveRsvp(name, Number(count));
   rsvpForm.reset();
   closeModal(rsvpModal);
-  showToast(`Cảm ơn ${name}, đã ghi nhận ${count} khách`);
+  const t = window.WEDDING_TEXT || {};
+  showCeremonyMessage(
+    t.rsvpThankYouMessage ||
+      "Sự hiện diện của bạn sẽ là niềm vinh hạnh cho gia đình chúng tôi."
+  );
 
   submitSheetWithQueue({
     type: "rsvp",
