@@ -113,9 +113,24 @@ function applyImageContent() {
   const images = window.WEDDING_IMAGES || {};
   document.querySelectorAll("[data-img-key]").forEach(el => {
     const key = el.getAttribute("data-img-key");
-    if (images[key]) {
-      el.src = images[key];
+    if (!images[key]) return;
+    try {
+      el.decoding = "async";
+    } catch {}
+    if (el.closest("#album-section")) {
+      el.loading = "lazy";
+    } else {
+      el.loading = "eager";
     }
+    el.addEventListener(
+      "error",
+      () => {
+        el.style.background = "linear-gradient(145deg,#ece8e0,#ddd8cf)";
+        el.alt = el.alt || "";
+      },
+      { once: true }
+    );
+    el.src = images[key];
   });
 }
 
@@ -263,34 +278,49 @@ function updateCountdown() {
 }
 
 function initReveal() {
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("active");
-        } else {
-          entry.target.classList.remove("active");
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
+  const revealOpts = { threshold: 0.06, rootMargin: "0px 0px 18% 0px" };
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+      }
+    });
+  }, revealOpts);
 
-  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  document.querySelectorAll(".reveal").forEach(el => revealObserver.observe(el));
 
-  const albumObserver = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-        } else {
-          entry.target.classList.remove("in-view");
-        }
-      });
-    },
-    { threshold: 0.55, rootMargin: "0px 0px -6% 0px" }
-  );
+  const albumOpts = { threshold: 0.2, rootMargin: "0px 0px 12% 0px" };
+  const albumObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+      }
+    });
+  }, albumOpts);
   document.querySelectorAll(".album-reveal").forEach(el => albumObserver.observe(el));
+
+  function revealVisibleInViewport(el) {
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < vh * 0.92 && r.bottom > vh * 0.05;
+  }
+
+  function fallbackReveal() {
+    document.querySelectorAll(".reveal").forEach(el => {
+      if (!el.classList.contains("active") && revealVisibleInViewport(el)) {
+        el.classList.add("active");
+      }
+    });
+    document.querySelectorAll(".album-reveal").forEach(el => {
+      if (!el.classList.contains("in-view") && revealVisibleInViewport(el)) {
+        el.classList.add("in-view");
+      }
+    });
+  }
+
+  requestAnimationFrame(fallbackReveal);
+  setTimeout(fallbackReveal, 400);
+  window.addEventListener("load", fallbackReveal);
 }
 
 function openModal(modalEl) {
@@ -652,12 +682,15 @@ async function runWebhookTest() {
 
 function initPetals() {
   const canvas = document.getElementById("petal-canvas");
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { alpha: true });
 
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const MAX_PETALS = 12; // so luong thap (petal ro rang hon)
-  const MAX_TOTAL = 24; // tong so petal (fall + rest) de roi lien tuc
-  const SPAWN_INTERVAL = 420; // ms
+  const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+  const lowPower =
+    typeof navigator !== "undefined" &&
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const MAX_PETALS = lowPower ? 6 : 10;
+  const MAX_TOTAL = lowPower ? 14 : 22;
+  const SPAWN_INTERVAL = lowPower ? 520 : 420;
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -775,6 +808,10 @@ function initPetals() {
   let last = performance.now();
   let lastSpawn = performance.now();
   function draw() {
+    if (document.visibilityState === "hidden") {
+      requestAnimationFrame(draw);
+      return;
+    }
     const now = performance.now();
     const dt = Math.min(0.034, Math.max(0.008, (now - last) / 1000)); // clamp 8-34ms
     last = now;

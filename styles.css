@@ -19,6 +19,8 @@ html {
 body {
   font-family: var(--sans);
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .site-shell {
@@ -27,8 +29,11 @@ body {
   margin: 0 auto;
   background: var(--beige);
   box-shadow: 0 0 28px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
 }
 
 .font-script {
@@ -37,6 +42,16 @@ body {
 .custom-script {
   font-family: var(--script-alt);
 }
+.hero-frame {
+  /* dvh/svh: tranh cat anh khi thanh dia chi Android/iOS doi chieu cao */
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100svh;
+  height: 100dvh;
+}
+
 .hero-frame::after {
   content: "";
   position: absolute;
@@ -97,12 +112,15 @@ body {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
   width: 100%;
   max-width: 480px;
   height: 100vh;
+  height: 100svh;
+  height: 100dvh;
   pointer-events: none;
   z-index: 35;
+  contain: strict;
 }
 
 .spinner {
@@ -481,9 +499,10 @@ body {
   object-fit: cover;
   border: 10px solid #fff;
   box-shadow: 0 7px 22px rgba(0, 0, 0, 0.15);
+  background: #e8e4dc;
   --tilt: 0deg;
   --shift: 0px;
-  transform: rotate(var(--tilt));
+  transform: translate3d(0, 0, 0) rotate(var(--tilt));
   transition: transform 0.25s ease, opacity 0.25s ease;
   cursor: zoom-in;
 }
@@ -499,11 +518,11 @@ img {
 }
 .album-reveal.from-left {
   --shift: -30px;
-  transform: translateX(var(--shift)) rotate(var(--tilt));
+  transform: translate3d(var(--shift), 0, 0) rotate(var(--tilt));
 }
 .album-reveal.from-right {
   --shift: 30px;
-  transform: translateX(var(--shift)) rotate(var(--tilt));
+  transform: translate3d(var(--shift), 0, 0) rotate(var(--tilt));
 }
 .album-reveal.in-view {
   animation: albumSlideIn 0.95s cubic-bezier(0.18, 0.88, 0.24, 1) forwards;
@@ -559,13 +578,11 @@ img {
 @keyframes albumModalZoomIn {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.975);
-    filter: blur(2px);
+    transform: translate3d(0, 8px, 0) scale(0.975);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -686,24 +703,25 @@ img {
 
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  backface-visibility: hidden;
 }
 
 .reveal.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
-/* Text lines reveal gradually and hide again on scroll out */
+/* Text lines reveal gradually (khong go bo active khi scroll — tranh mat chu) */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translate3d(0, 16px, 0);
   transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .reveal-stagger.active > * {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 .reveal-stagger.active > *:nth-child(1) { transition-delay: 0.05s; }
 .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.15s; }
@@ -712,19 +730,19 @@ img {
 .reveal-stagger.active > *:nth-child(5) { transition-delay: 0.45s; }
 .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.55s; }
 
+/* Bo blur: mot so GPU Android/WebView lam mat chu khi co filter */
 .text-reveal > * {
   opacity: 0;
-  transform: translateX(-34px) scale(0.98);
-  filter: blur(2px);
-  transition: opacity 0.9s cubic-bezier(0.2, 0.95, 0.25, 1), transform 0.9s cubic-bezier(0.2, 0.95, 0.25, 1), filter 0.9s ease;
+  transform: translate3d(-28px, 0, 0) scale(0.99);
+  transition: opacity 0.85s cubic-bezier(0.2, 0.95, 0.25, 1), transform 0.85s cubic-bezier(0.2, 0.95, 0.25, 1);
+  backface-visibility: hidden;
 }
 .text-reveal > *:nth-child(even) {
-  transform: translateX(34px) scale(0.98);
+  transform: translate3d(28px, 0, 0) scale(0.99);
 }
 .text-reveal.active > * {
   opacity: 1;
-  transform: translateX(0) scale(1);
-  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 .text-reveal.active > *:nth-child(1) { transition-delay: 0.06s; }
 .text-reveal.active > *:nth-child(2) { transition-delay: 0.2s; }
@@ -842,10 +860,31 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .reveal.active,
+  .reveal-stagger > *,
+  .reveal-stagger.active > *,
+  .text-reveal > *,
+  .text-reveal.active > *,
+  .album-reveal,
+  .album-reveal.in-view {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
     animation: none !important;
     transition: none !important;
-    scroll-behavior: auto !important;
+  }
+  .chat-bubble,
+  .chat-bubble.show {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .scroll-hint {
+    animation: none !important;
   }
 }
 
@@ -855,6 +894,6 @@ img {
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg));
   }
 }
