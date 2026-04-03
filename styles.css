@@ -863,28 +863,14 @@ img {
   html {
     scroll-behavior: auto;
   }
-  .reveal,
-  .reveal.active,
-  .reveal-stagger > *,
-  .reveal-stagger.active > *,
-  .text-reveal > *,
-  .text-reveal.active > *,
-  .album-reveal,
-  .album-reveal.in-view {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-    animation: none !important;
-    transition: none !important;
-  }
-  .chat-bubble,
-  .chat-bubble.show {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-  }
+  /* Laptop/Android đôi khi bật "giảm chuyển động" mặc định.
+     Giữ hiệu ứng reveal/album để tránh mất chữ/ảnh và mất cảm giác vuốt.
+     Chỉ tắt các animation liên tục, tốn tài nguyên. */
   .scroll-hint {
     animation: none !important;
+  }
+  #petal-canvas {
+    display: none !important;
   }
 }
 
