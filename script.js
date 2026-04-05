@@ -68,6 +68,8 @@ function applyTextContent() {
     ["ceremony-church-lunar", text.ceremonyChurchLunar],
     ["groom-full-name", text.groomFullName],
     ["bride-full-name", text.brideFullName],
+    ["bride-intro-label", text.brideIntroLabel],
+    ["groom-intro-label", text.groomIntroLabel],
     ["event-time", text.eventTime],
     ["event-date-text", text.eventDateText],
     ["venue-name", text.venueName],

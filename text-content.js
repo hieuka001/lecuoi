@@ -8,6 +8,8 @@ window.WEDDING_TEXT = {
   coupleScript: "Khắc Tín<br>Yến Nhi",
   groomFullName: "Phaolô Hồ Khắc Tín",
   brideFullName: "Maria Trần Phạm Yến Nhi",
+  brideIntroLabel: "Cô dâu",
+  groomIntroLabel: "Chú rể",
   /** Hôn lễ tại nhà thờ — sửa nội dung tại đây */
   ceremonyChurchTitle: "Hôn lễ được cử hành tại Thánh đường Giáo xứ Vinh Trung",
   ceremonyChurchTime: "Vào lúc 10 giờ 00",

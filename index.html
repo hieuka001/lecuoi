@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Alex+Brush&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Alex+Brush&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
@@ -53,15 +53,24 @@
         <div class="scroll-hint">Scroll</div>
       </header>
 
-      <section class="couple-intro px-6 py-10 bg-[#FDFBF7] text-center reveal text-reveal" aria-label="Giới thiệu cô dâu chú rể">
-        <div class="couple-intro-grid">
-          <article class="couple-intro-card">
-            <p class="couple-intro-label">Chú rể</p>
-            <p id="groom-full-name" class="couple-intro-name"></p>
+      <section class="couple-showcase reveal text-reveal" aria-label="Giới thiệu cô dâu chú rể">
+        <div class="couple-showcase-bg" aria-hidden="true"></div>
+        <div class="couple-showcase-inner">
+          <article class="couple-showpiece couple-showpiece--bride">
+            <p id="bride-intro-label" class="couple-showpiece-label">Cô dâu</p>
+            <div class="couple-showpiece-frame">
+              <img data-img-key="bridePortrait" src="" alt="Cô dâu" class="couple-showpiece-img" width="400" height="520" decoding="async">
+              <div class="couple-showpiece-gradient couple-showpiece-gradient--bride" aria-hidden="true"></div>
+              <p id="bride-full-name" class="couple-showpiece-script"></p>
+            </div>
           </article>
-          <article class="couple-intro-card">
-            <p class="couple-intro-label">Cô dâu</p>
-            <p id="bride-full-name" class="couple-intro-name"></p>
+          <article class="couple-showpiece couple-showpiece--groom">
+            <p id="groom-intro-label" class="couple-showpiece-label">Chú rể</p>
+            <div class="couple-showpiece-frame">
+              <img data-img-key="groomPortrait" src="" alt="Chú rể" class="couple-showpiece-img" width="400" height="520" decoding="async">
+              <div class="couple-showpiece-gradient couple-showpiece-gradient--groom" aria-hidden="true"></div>
+              <p id="groom-full-name" class="couple-showpiece-script couple-showpiece-script--groom"></p>
+            </div>
           </article>
         </div>
       </section>
