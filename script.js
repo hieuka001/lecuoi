@@ -66,14 +66,11 @@ function applyTextContent() {
     ["ceremony-church-time", text.ceremonyChurchTime],
     ["ceremony-church-date", text.ceremonyChurchDate],
     ["ceremony-church-lunar", text.ceremonyChurchLunar],
-    ["ceremony-home-title", text.ceremonyHomeTitle],
-    ["ceremony-home-time", text.ceremonyHomeTime],
-    ["ceremony-home-date", text.ceremonyHomeDate],
-    ["ceremony-home-lunar", text.ceremonyHomeLunar],
+    ["groom-full-name", text.groomFullName],
+    ["bride-full-name", text.brideFullName],
     ["event-time", text.eventTime],
     ["event-date-text", text.eventDateText],
     ["venue-name", text.venueName],
-    ["timeline-date", text.timelineDate],
     ["guestbook-title", text.guestbookTitle],
     ["footer-title", text.footerTitle]
   ];
@@ -91,11 +88,7 @@ function applyTextContent() {
   const stack = document.getElementById("ceremony-stack");
   if (stack) {
     const hasChurch = Boolean(text.ceremonyChurchTitle && String(text.ceremonyChurchTitle).trim());
-    const hasHome = Boolean(text.ceremonyHomeTitle && String(text.ceremonyHomeTitle).trim());
-    stack.style.display = hasChurch || hasHome ? "" : "none";
-    const blocks = stack.querySelectorAll(".ceremony-block");
-    if (blocks[0]) blocks[0].style.display = hasChurch ? "" : "none";
-    if (blocks[1]) blocks[1].style.display = hasHome ? "" : "none";
+    stack.style.display = hasChurch ? "" : "none";
   }
 }
 

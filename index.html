@@ -47,11 +47,24 @@
         <img data-img-key="hero" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" alt="Ảnh cưới Mai Thu và Minh Khanh" class="w-full h-full object-cover" width="1200" height="1600" fetchpriority="high" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
         <div class="absolute bottom-[14vh] left-0 text-center text-white w-full px-5 reveal reveal-stagger text-reveal hero-text-wrap">
-          <h1 id="couple-names" class="font-serif uppercase hero-couple-title">Mai Thu &amp; Minh Khanh</h1>
-          <p id="wedding-date" class="mt-3 tracking-[0.3em] text-sm">14.12.2025</p>
+          <h1 id="couple-names" class="hero-couple-title">Mai Thu &amp; Minh Khanh</h1>
+          <p id="wedding-date" class="mt-3 text-sm hero-wedding-date">14.12.2025</p>
         </div>
         <div class="scroll-hint">Scroll</div>
       </header>
+
+      <section class="couple-intro px-6 py-10 bg-[#FDFBF7] text-center reveal text-reveal" aria-label="Giới thiệu cô dâu chú rể">
+        <div class="couple-intro-grid">
+          <article class="couple-intro-card">
+            <p class="couple-intro-label">Chú rể</p>
+            <p id="groom-full-name" class="couple-intro-name"></p>
+          </article>
+          <article class="couple-intro-card">
+            <p class="couple-intro-label">Cô dâu</p>
+            <p id="bride-full-name" class="couple-intro-name"></p>
+          </article>
+        </div>
+      </section>
 
       <section class="px-6 py-16 bg-[#FDFBF7] text-center text-reveal reveal">
         <div class="flex justify-between gap-4 reveal">
@@ -69,7 +82,7 @@
           <div class="monogram-wrap mx-auto mb-6">
             <div id="monogram-text" class="monogram">T&amp;N</div>
           </div>
-          <p id="invite-message" class="text-[11px] tracking-[0.12em] leading-6 text-gray-600 uppercase">
+          <p id="invite-message" class="text-[11px] leading-6 text-gray-600 uppercase invite-message-tight">
             Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi
           </p>
           <h2 id="couple-script" class="font-script custom-script text-[#C5A880] text-6xl leading-[0.85] mt-5">Mai Thu<br>Minh Khanh</h2>
@@ -83,21 +96,12 @@
               </div>
               <p id="ceremony-church-lunar" class="ceremony-lunar"></p>
             </div>
-            <div class="ceremony-block ceremony-block--sep">
-              <p id="ceremony-home-title" class="ceremony-title"></p>
-              <div class="ceremony-datetime" role="group" aria-label="Thời gian lễ thành hôn tư gia">
-                <span id="ceremony-home-time" class="ceremony-time"></span>
-                <span class="ceremony-divider" aria-hidden="true"></span>
-                <span id="ceremony-home-date" class="ceremony-date"></span>
-              </div>
-              <p id="ceremony-home-lunar" class="ceremony-lunar"></p>
-            </div>
           </div>
           <p id="event-time" class="mt-7 text-xs tracking-[0.12em] text-gray-600">VÀO LÚC 15 GIỜ | CHỦ NHẬT</p>
-          <p id="event-date-text" class="font-serif text-2xl font-bold mt-2">NGÀY 14 THÁNG 12 NĂM 2025</p>
+          <p id="event-date-text" class="invitation-heading-date mt-2">NGÀY 14 THÁNG 12 NĂM 2025</p>
           <p id="event-date-lunar" class="text-xs text-gray-600 mt-1">(TỨC NGÀY 25 THÁNG 10 NĂM ẤT TỴ)</p>
           <p class="text-xs tracking-[0.12em] text-gray-600 mt-8">ĐỊA ĐIỂM TỔ CHỨC TẠI</p>
-          <p id="venue-name" class="font-serif text-2xl font-semibold mt-2">TRUNG TÂM TIỆC CƯỚI TÂN AN</p>
+          <p id="venue-name" class="invitation-heading-venue mt-2">TRUNG TÂM TIỆC CƯỚI TÂN AN</p>
           <p id="venue-address" class="text-sm text-gray-600 leading-6 mt-2">Số 22 Đường Hồng Bàng, P. Hồng Bàng, TP. Hải Phòng</p>
           <a id="map-link" href="https://maps.app.goo.gl/yDk8pDZEdzDnJLib8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 mt-7 px-8 py-3 border border-[#C5A880] rounded-full text-[#C5A880] text-xs font-semibold tracking-wide">
             <i class="fa-solid fa-location-dot"></i> CHỈ ĐƯỜNG
@@ -127,33 +131,6 @@
         <p id="countdown-label" class="mt-10 text-xs text-gray-600 tracking-wide reveal">We'll be sharing a home and a life together in</p>
         <div class="countdown reveal" aria-live="polite">
           <div id="days" class="cd-unit">000</div><span class="cd-sep" aria-hidden="true">:</span><div id="hours" class="cd-unit">00</div><span class="cd-sep" aria-hidden="true">:</span><div id="mins" class="cd-unit">00</div><span class="cd-sep" aria-hidden="true">:</span><div id="secs" class="cd-unit">00</div>
-        </div>
-      </section>
-
-      <section class="relative py-16 px-6 text-white overflow-hidden timeline-sec text-reveal reveal">
-        <img data-img-key="timelineBg" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200" alt="Timeline background" class="absolute inset-0 w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black/65"></div>
-        <div class="relative z-10 text-reveal reveal">
-          <h2 class="font-script text-7xl text-[#D4AF37] text-center">Timeline</h2>
-          <p id="timeline-date" class="text-center tracking-[0.35em] text-sm mb-10 reveal">14 . 12 . 2025</p>
-          <div class="timeline-list">
-            <article class="timeline-item reveal">
-              <i class="fa-solid fa-camera-retro timeline-icon"></i>
-              <div><h4>Đón khách</h4><p>8 giờ</p></div>
-            </article>
-            <article class="timeline-item reveal">
-              <i class="fa-solid fa-ring timeline-icon"></i>
-              <div><h4>Nghi lễ cưới</h4><p>10 giờ</p></div>
-            </article>
-            <article class="timeline-item reveal">
-              <i class="fa-solid fa-utensils timeline-icon"></i>
-              <div><h4>Khai tiệc</h4><p>11 giờ</p></div>
-            </article>
-            <article class="timeline-item reveal">
-              <i class="fa-solid fa-compact-disc timeline-icon"></i>
-              <div><h4>Giao lưu với CDCR</h4><p>12 giờ 30 phút</p></div>
-            </article>
-          </div>
         </div>
       </section>
 
@@ -188,8 +165,10 @@
           </button>
         </form>
 
-        <div id="chat-list" class="mt-5 space-y-3 guestbook-panel !pt-4 chat-wrap"></div>
-        <p id="chat-empty" class="text-center text-sm text-gray-500 mt-4 guestbook-panel !py-6">Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc!</p>
+        <div id="guestbook-messages-area" class="guestbook-messages-area" aria-hidden="true">
+          <div id="chat-list" class="mt-5 space-y-3 guestbook-panel !pt-4 chat-wrap"></div>
+          <p id="chat-empty" class="text-center text-sm text-gray-500 mt-4 guestbook-panel !py-6">Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc!</p>
+        </div>
       </section>
 
       <footer class="relative py-20 px-6 text-center text-white overflow-hidden text-reveal reveal">
