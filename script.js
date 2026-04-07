@@ -33,7 +33,7 @@ const MONTH_VI = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "T
 
 function getTargetDate() {
   const cfg = window.WEDDING_TEXT || {};
-  const targetStr = cfg.countdownTarget || "2026-05-03T17:00:00+07:00";
+  const targetStr = cfg.countdownTarget || "2026-05-09T17:00:00+07:00";
   const targetDate = new Date(targetStr);
   if (Number.isNaN(targetDate.getTime())) return null;
   return targetDate;

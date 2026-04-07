@@ -1,9 +1,9 @@
 window.WEDDING_TEXT = {
   coupleNames: "Khắc Tín - Yến Nhi",
   monogram: "T&N",
-  weddingDate: "03.05.2026",
-  // Dung cho countdown (ISO). Vi du: "2026-05-03T17:00:00+07:00"
-  countdownTarget: "2026-05-03T17:00:00+07:00",
+  weddingDate: "09.05.2026",
+  // Dung cho countdown (ISO). Vi du: "2026-05-09T11:00:00+07:00"
+  countdownTarget: "2026-05-09T11:00:00+07:00",
   inviteMessage: "Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi",
   coupleScript: "Khắc Tín<br>Yến Nhi",
   groomFullName: "Phaolô Hồ Khắc Tín",
@@ -15,14 +15,14 @@ window.WEDDING_TEXT = {
   brideVows:
     "Em chọn anh là nhà,\nLà người đồng hành, là niềm tin trọn đời.",
   /** Hôn lễ tại nhà thờ — sửa nội dung tại đây */
-  eventTime: "VÀO LÚC 11 GIỜ | CHỦ NHẬT",
-  eventDateText: "NGÀY 03 THÁNG 05 NĂM 2026",
-  eventDateLunar: "(TỨC NGÀY 17 THÁNG 03 NĂM BÍNH NGỌ)",
-  brideFamily: "Ông Giuse Trần Ngọc Triệu<br>Bà Maria Phạm Thị Bích Luận",
-  groomFamily: "Ông Phêrô Hồ Ngọc Cẩn<br>Bà Lucia Trần Thị Ngọc Linh",
-  venueName: "Nhà Hàng Bá Hùng",
-  venueAddress: "126A NGUYỄN TẤT THÀNH, P. BÀ RỊA, TP. Hồ Chí Minh",
-  mapLink: "https://maps.app.goo.gl/yDk8pDZEdzDnJLib8",
+  eventTime: "VÀO LÚC 11 GIỜ | THỨ BẢY",
+  eventDateText: "NGÀY 09 THÁNG 05 NĂM 2026",
+  eventDateLunar: "(TỨC NGÀY 23 THÁNG 03 NĂM BÍNH NGỌ)",
+  brideFamily: "Ông Phêrô Hồ Ngọc Cẩn<br>Bà Lucia Trần Thị Ngọc Linh",
+  groomFamily: "Ông Giuse Trần Ngọc Triệu<br>Bà Maria Phạm Thị Bích Luận",
+  venueName: "TƯ GIA NHÀ TRAI",
+  venueAddress: "Số nhà 4C, Đường 21B, Thôn 6, X.Hòa Thuận, TP. Buôn Ma Thuột, Daklak (cũ)",
+  mapLink: "https://maps.app.goo.gl/ozEPsP9Re4XVXa7WA",
   giftTitle: "Hộp mừng cưới",
   giftSubtitle: "Cảm ơn tình cảm của mọi người đã dành cho chúng mình!",
   guestbookTitle: "Sổ lưu bút",
