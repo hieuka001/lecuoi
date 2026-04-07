@@ -303,7 +303,8 @@ async function preloadCriticalImages() {
   if (!urls.length) return;
 
   const startedAt = Date.now();
-  updatePreloader("Đang tải ảnh… 0%");
+  // Giữ nguyên 1 câu duy nhất: “Xin chờ đợi ạ…”
+  updatePreloader("Xin chờ đợi ạ...");
 
   // tải song song vừa phải để đỡ nghẽn mạng + tránh giật
   const concurrency = 4;
@@ -319,8 +320,7 @@ async function preloadCriticalImages() {
       // eslint-disable-next-line no-await-in-loop
       await preloadOneImage(urls[myIdx], 9000);
       done += 1;
-      const pct = Math.round((done / urls.length) * 100);
-      updatePreloader(`Đang tải ảnh… ${pct}%`);
+      // không hiển thị % để UI gọn, tránh giật text
     }
   }
 
