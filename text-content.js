@@ -33,7 +33,7 @@ window.WEDDING_TEXT = {
   footerTitle: "Thank you",
   footerMessage: "Cảm ơn bạn đã dành tình cảm cho chúng mình!<br>Sự hiện diện của bạn chính là món quà ý nghĩa nhất.",
   // Journey Of Love captions (10 ảnh)
-  journeyCaption1: "Khoảnh khắc đầu tiên khi mình nhìn về nhau.",
+  journeyCaption1: "Sự gì Thiên Chúa đã kết hợp, loài người không được phân ly.",
   journeyCaption2: "Nụ cười em là lý do khiến ngày hôm đó rực rỡ.",
   journeyCaption3: "Mình nắm tay nhau qua từng con đường nhỏ.",
   journeyCaption4: "Bình yên là khi có nhau trong từng khuôn hình.",
