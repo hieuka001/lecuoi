@@ -60,7 +60,7 @@
             <div class="couple-figure">
               <p id="groom-intro-label" class="couple-role-label">Chú rể</p>
               <div class="couple-photo-frame">
-                <img data-img-key="groomPortrait" src="" alt="Chú rể" class="couple-photo" width="420" height="560" decoding="async">
+                <img data-img-key="groomPortrait" src="" alt="Chú rể" class="couple-photo" width="420" height="560" decoding="async" fetchpriority="high" loading="eager">
                 <div class="couple-photo-gradient couple-photo-gradient--groom" aria-hidden="true"></div>
               </div>
             </div>
@@ -74,7 +74,7 @@
             <div class="couple-figure">
               <p id="bride-intro-label" class="couple-role-label">Cô dâu</p>
               <div class="couple-photo-frame">
-                <img data-img-key="bridePortrait" src="" alt="Cô dâu" class="couple-photo" width="420" height="560" decoding="async">
+                <img data-img-key="bridePortrait" src="" alt="Cô dâu" class="couple-photo" width="420" height="560" decoding="async" fetchpriority="high" loading="eager">
                 <div class="couple-photo-gradient couple-photo-gradient--bride" aria-hidden="true"></div>
               </div>
             </div>
@@ -209,6 +209,19 @@
         </div>
       </section>
 
+      <section id="gift-section" class="px-6 py-16 bg-white text-reveal reveal" aria-label="Quà tặng">
+        <header class="text-center reveal text-reveal">
+          <h2 id="gift-title" class="font-script text-7xl text-[#C5A880] leading-none">Hộp mừng cưới</h2>
+          <p id="gift-subtitle" class="mt-2 text-sm text-gray-600">Cảm ơn tình cảm của mọi người đã dành cho chúng mình!</p>
+        </header>
+        <div class="mt-8 flex flex-col items-center gap-4 reveal">
+          <button id="open-gift" type="button" class="gift-box" aria-label="Mở QR mừng cưới">
+            <img data-asset-key="giftBox" src="" alt="Gift box">
+          </button>
+          <p class="text-xs text-gray-500 tracking-wide">Chạm để xem mã QR</p>
+        </div>
+      </section>
+
       <footer class="relative py-20 px-6 text-center text-white overflow-hidden text-reveal reveal">
         <img data-img-key="footer" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200" alt="Footer background" class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/60"></div>
@@ -245,12 +258,26 @@
         </div>
       </div>
     </div>
+
+    <div id="gift-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <button id="close-gift" class="absolute right-4 top-4 text-xl text-gray-500" aria-label="Đóng quà tặng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h3 class="text-center font-semibold text-lg mt-2">Mừng cưới</h3>
+        <div class="mt-5 flex flex-col items-center">
+          <img data-asset-key="transferQr" src="" alt="QR chuyển khoản" class="gift-qr">
+          <p class="mt-3 text-xs text-gray-500 text-center leading-5">Bạn có thể quét mã QR để chuyển khoản. Xin chân thành cảm ơn!</p>
+        </div>
+      </div>
+    </div>
     <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>
   </div>
   <script src="./text-content.js"></script>
   <script src="./image-content.js"></script>
   <script src="./asset-content.js"></script>
   <script src="./music-content.js"></script>
+  <script src="./feature-flags.js"></script>
   <script src="./sheet-content.js"></script>
   <script src="./script.js"></script>
 </body>

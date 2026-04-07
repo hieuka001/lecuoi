@@ -71,6 +71,8 @@ function applyTextContent() {
     ["event-time", text.eventTime],
     ["event-date-text", text.eventDateText],
     ["venue-name", text.venueName],
+    ["gift-title", text.giftTitle],
+    ["gift-subtitle", text.giftSubtitle],
     ["guestbook-title", text.guestbookTitle],
     ["footer-title", text.footerTitle]
   ];
@@ -100,6 +102,25 @@ function applyTextContent() {
   if (brideVowsEl && text.brideVows) {
     brideVowsEl.innerHTML = String(text.brideVows).trim().replace(/\n+/g, "<br>");
   }
+}
+
+function applyFeatureFlags() {
+  const f = window.WEDDING_FEATURES || {};
+  const gifts = String(f.gifts || "on").toLowerCase() !== "off";
+  const giftSection = document.getElementById("gift-section");
+  if (giftSection) giftSection.style.display = gifts ? "" : "none";
+}
+
+function initGift() {
+  const openGift = document.getElementById("open-gift");
+  const giftModal = document.getElementById("gift-modal");
+  const closeGift = document.getElementById("close-gift");
+  if (!openGift || !giftModal || !closeGift) return;
+  openGift.addEventListener("click", () => openModal(giftModal));
+  closeGift.addEventListener("click", () => closeModal(giftModal));
+  giftModal.addEventListener("click", e => {
+    if (e.target === giftModal) closeModal(giftModal);
+  });
 }
 
 function buildCalendar() {
@@ -440,17 +461,31 @@ function updateCountdown() {
 }
 
 function initReveal() {
+  // Hysteresis để tránh "chớp nháy" khi cuộn sát rìa viewport (đặc biệt ở khối ảnh CD/CR)
+  const state = new WeakMap();
   const observer = new IntersectionObserver(
     entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("active");
-        } else {
-          entry.target.classList.remove("active");
+        const el = entry.target;
+        const prev = state.get(el) || { active: false, last: 0 };
+        const now = Date.now();
+        const ratio = entry.intersectionRatio || 0;
+        const wantOn = entry.isIntersecting && ratio >= 0.14;
+        const wantOff = !entry.isIntersecting || ratio <= 0.02;
+
+        // debounce nhỏ để tránh toggle liên tục khi scroll rung
+        if (now - prev.last < 140) return;
+
+        if (!prev.active && wantOn) {
+          el.classList.add("active");
+          state.set(el, { active: true, last: now });
+        } else if (prev.active && wantOff) {
+          el.classList.remove("active");
+          state.set(el, { active: false, last: now });
         }
       });
     },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    { threshold: [0, 0.02, 0.14, 0.22], rootMargin: "0px 0px -28px 0px" }
   );
 
   document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
@@ -982,6 +1017,7 @@ window.addEventListener("load", async () => {
   applyTextContent();
   applyImageContent();
   applyAssetContent();
+  applyFeatureFlags();
   buildCalendar();
   // Warm-up audio to load nhanh hơn cho lần mở thiệp sau
   try {
@@ -997,6 +1033,7 @@ window.addEventListener("load", async () => {
   initAlbumModal();
   // petals để sau khi đã preload xong (đỡ giật lúc mới vào)
   initPetals();
+  initGift();
   updateCountdown();
   setInterval(updateCountdown, 1000);
   void initGuestbookDisplay();

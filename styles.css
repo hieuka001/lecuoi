@@ -253,6 +253,9 @@ body {
   box-shadow:
     0 18px 42px rgba(0, 0, 0, 0.14),
     0 0 0 1px rgba(197, 168, 128, 0.4);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .couple-photo {
@@ -261,6 +264,8 @@ body {
   object-fit: cover;
   display: block;
   vertical-align: top;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .couple-photo-gradient {
@@ -789,6 +794,37 @@ body {
 
 img {
   display: block;
+}
+
+/* Quà tặng */
+.gift-box {
+  width: 148px;
+  height: 148px;
+  border-radius: 14px;
+  border: 1px solid rgba(197, 168, 128, 0.7);
+  background: linear-gradient(145deg, #ffffff, #f7f1e5);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.gift-box img {
+  width: 118px;
+  height: 118px;
+  object-fit: contain;
+}
+.gift-box:active {
+  transform: scale(0.97);
+}
+.gift-qr {
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(197, 168, 128, 0.45);
+  background: #fff;
+  padding: 10px;
 }
 .album-item:nth-child(3n + 1) { height: 220px; }
 .album-item:nth-child(3n + 2) { height: 170px; }
