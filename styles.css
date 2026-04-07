@@ -137,27 +137,38 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 2.1rem;
-  padding: 2.35rem 1.1rem 2.6rem;
+  gap: 2.2rem;
+  padding: 2.35rem 1.1rem 2.8rem;
   max-width: 100%;
 }
 
-.couple-showpiece {
-  display: flex;
-  flex-direction: column;
+/* layout 2 hang: anh + loi the ben canh (so le) */
+.couple-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.15rem;
+  align-items: start;
 }
 
-.couple-showpiece--bride {
-  align-self: flex-start;
-  width: min(88%, 308px);
+@media (min-width: 420px) {
+  .couple-row {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 1.35rem;
+    align-items: center;
+  }
+  .couple-row--reverse {
+    grid-template-columns: 0.95fr 1.05fr;
+  }
+  .couple-row--reverse .couple-figure {
+    order: 2;
+  }
+  .couple-row--reverse .couple-vows {
+    order: 1;
+    text-align: right;
+  }
 }
 
-.couple-showpiece--groom {
-  align-self: flex-end;
-  width: min(88%, 308px);
-}
-
-.couple-showpiece-label {
+.couple-role-label {
   font-family: var(--display);
   font-size: 13px;
   font-weight: 600;
@@ -167,12 +178,12 @@ body {
   margin: 0 0 0.55rem 0.2rem;
 }
 
-.couple-showpiece--groom .couple-showpiece-label {
+.couple-row--reverse .couple-role-label {
   text-align: right;
   margin: 0 0.2rem 0.55rem 0;
 }
 
-.couple-showpiece-frame {
+.couple-photo-frame {
   position: relative;
   border-radius: 6px;
   overflow: hidden;
@@ -181,7 +192,7 @@ body {
     0 0 0 1px rgba(197, 168, 128, 0.4);
 }
 
-.couple-showpiece-img {
+.couple-photo {
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
@@ -189,22 +200,21 @@ body {
   vertical-align: top;
 }
 
-.couple-showpiece-gradient {
+.couple-photo-gradient {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.couple-showpiece-gradient--bride {
+.couple-photo-gradient--bride {
   background: linear-gradient(to top, rgba(95, 28, 28, 0.42) 0%, rgba(40, 20, 20, 0.12) 35%, transparent 58%);
 }
 
-.couple-showpiece-gradient--groom {
+.couple-photo-gradient--groom {
   background: linear-gradient(to top, rgba(25, 35, 45, 0.48) 0%, rgba(20, 25, 30, 0.15) 38%, transparent 55%);
 }
 
-/* Dancing Script: viet hoa tot hon, giau dau bang vien sang */
-.couple-showpiece-script {
+.couple-name-script {
   position: absolute;
   bottom: 10%;
   left: 7%;
@@ -212,14 +222,15 @@ body {
   margin: 0;
   font-family: var(--dancing);
   font-weight: 700;
-  font-size: clamp(1.65rem, 6.8vw, 2.35rem);
+  /* 1 dòng ngang: giảm cỡ chữ + không xuống dòng */
+  font-size: clamp(1.2rem, 5.2vw, 1.75rem);
   line-height: 1.2;
   color: #fff;
   text-rendering: optimizeLegibility;
   letter-spacing: 0.01em;
-  white-space: normal;
-  overflow-wrap: break-word;
-  hyphens: manual;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-shadow:
     0 0 2px rgba(0, 0, 0, 0.9),
     0 1px 0 rgba(255, 255, 255, 0.35),
@@ -227,10 +238,69 @@ body {
     0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
-.couple-showpiece-script--groom {
+.couple-name-script--right {
   left: 10%;
   right: 7%;
   text-align: right;
+}
+
+.couple-vows-text {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(31, 41, 55, 0.88);
+  letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
+}
+
+.couple-vows-text::before {
+  content: "“";
+  display: inline-block;
+  margin-right: 4px;
+  color: rgba(197, 168, 128, 0.85);
+  font-family: var(--display);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.couple-vows-text::after {
+  content: "”";
+  display: inline-block;
+  margin-left: 4px;
+  color: rgba(197, 168, 128, 0.85);
+  font-family: var(--display);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* animation: trượt 2 bên vào theo từng hàng khi vuốt */
+.couple-row .couple-figure,
+.couple-row .couple-vows {
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.couple-row .couple-figure {
+  transform: translateX(-28px);
+  transition-delay: 0.03s;
+}
+.couple-row .couple-vows {
+  transform: translateX(28px);
+  transition-delay: 0.12s;
+}
+.couple-row--reverse .couple-figure {
+  transform: translateX(28px);
+}
+.couple-row--reverse .couple-vows {
+  transform: translateX(-28px);
+}
+
+.couple-row.reveal.active .couple-figure,
+.couple-row.reveal.active .couple-vows {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .invite-message-tight {
@@ -624,120 +694,6 @@ body {
   font-family: var(--sans);
 }
 
-.ceremony-message {
-  position: fixed;
-  left: 50%;
-  bottom: max(18%, 100px);
-  transform: translate3d(-50%, 16px, 0);
-  width: min(92%, 340px);
-  z-index: 200;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.55s;
-}
-
-.ceremony-message.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translate3d(-50%, 0, 0);
-  transition: opacity 0.55s ease, transform 0.55s ease, visibility 0s;
-}
-
-.ceremony-message-text {
-  font-family: var(--script);
-  font-size: clamp(1.35rem, 4.2vw, 1.75rem);
-  line-height: 1.5;
-  color: #3d2f24;
-  text-align: center;
-  margin: 0;
-  padding: 1rem 1.15rem;
-  background: rgba(255, 252, 248, 0.97);
-  border-radius: 1.1rem;
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.14);
-  border: 1px solid rgba(197, 168, 128, 0.5);
-  letter-spacing: 0.02em;
-}
-
-.timeline-list {
-  position: relative;
-  max-width: 350px;
-  margin: 0 auto;
-  padding-left: 34px;
-}
-
-.timeline-list::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 8px;
-  bottom: 10px;
-  width: 2px;
-  background: rgba(212, 175, 55, 0.88);
-}
-.timeline-list::after {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #d4af37;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
-}
-
-.timeline-item {
-  position: relative;
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-.timeline-item:last-child::after {
-  content: "";
-  position: absolute;
-  left: -28px;
-  bottom: -8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #d4af37;
-}
-
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: -24px;
-  top: 20px;
-  width: 250px;
-  height: 1px;
-  background: rgba(212, 175, 55, 0.7);
-}
-
-.timeline-icon {
-  width: 36px;
-  margin-top: 8px;
-  font-size: 30px;
-  color: #ecd7a8;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
-}
-
-.timeline-item h4 {
-  font-size: 14px;
-  color: #f4f4f5;
-}
-
-.timeline-item p {
-  font-family: var(--serif);
-  font-size: 38px;
-  color: #ecd7a8;
-  line-height: 1.1;
-}
-
 .album-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -834,28 +790,6 @@ img {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-.gift-box {
-  width: 148px;
-  height: 148px;
-  border-radius: 10px;
-  border: 2px solid var(--gold);
-  background: linear-gradient(145deg, #ffffff, #f7f1e5);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-.gift-box img {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-}
-
-.gift-box:active {
-  transform: scale(0.96);
 }
 
 .input-ui {
@@ -1048,62 +982,6 @@ img {
 .toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
-}
-
-.sync-bar {
-  position: fixed;
-  left: 12px;
-  bottom: 16px;
-  z-index: 130;
-  display: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  max-width: calc(100vw - 24px);
-}
-
-.sync-status {
-  background: rgba(31, 41, 55, 0.9);
-  color: #fff;
-  font-size: 11px;
-  letter-spacing: 0.01em;
-  padding: 7px 10px;
-  border-radius: 999px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-  transition: background-color 0.22s ease, opacity 0.22s ease;
-}
-.sync-status.ok {
-  background: rgba(21, 128, 61, 0.92);
-}
-.sync-status.warn {
-  background: rgba(180, 83, 9, 0.92);
-}
-.sync-status.err {
-  background: rgba(185, 28, 28, 0.92);
-}
-
-.sync-test-btn {
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  background: rgba(55, 65, 81, 0.95);
-  color: #f3f4f6;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 7px 12px;
-  border-radius: 999px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-  transition: opacity 0.2s ease, transform 0.15s ease;
-}
-.sync-test-btn:hover:not(:disabled) {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-.sync-test-btn:disabled {
-  opacity: 0.5;
-  cursor: wait;
 }
 
 @media (prefers-reduced-motion: reduce) {

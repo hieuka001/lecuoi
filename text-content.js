@@ -10,6 +10,10 @@ window.WEDDING_TEXT = {
   brideFullName: "Maria Trần Phạm Yến Nhi",
   brideIntroLabel: "Cô dâu",
   groomIntroLabel: "Chú rể",
+  groomVows:
+    "Anh sẽ nắm tay em qua mọi mùa nắng mưa,\nGiữ bình yên cho em bằng tất cả chân thành.",
+  brideVows:
+    "Em chọn anh là nhà,\nLà người đồng hành, là niềm tin trọn đời.",
   /** Hôn lễ tại nhà thờ — sửa nội dung tại đây */
   ceremonyChurchTitle: "Hôn lễ được cử hành tại Thánh đường Giáo xứ Vinh Trung",
   ceremonyChurchTime: "Vào lúc 10 giờ 00",
@@ -32,14 +36,27 @@ window.WEDDING_TEXT = {
     "Sự hiện diện của bạn sẽ là niềm vinh hạnh cho gia đình chúng tôi.",
   footerTitle: "Thank you",
   footerMessage: "Cảm ơn bạn đã dành tình cảm cho chúng mình!<br>Sự hiện diện của bạn chính là món quà ý nghĩa nhất.",
-  albumCaption1: "Khoảnh khắc đầu tiên khi mình nhìn về nhau.",
-  albumCaption2: "Nụ cười em là lý do khiến ngày hôm đó rực rỡ.",
-  albumCaption3: "Mình nắm tay nhau qua từng con đường nhỏ.",
-  albumCaption4: "Bình yên là khi có nhau trong từng khuôn hình.",
-  albumCaption5: "Một ánh nhìn, một lời hứa, một đời thương.",
-  albumCaption6: "Ngày hôm đó, thời gian như chậm lại.",
-  albumCaption7: "Cảm ơn vì đã đến và ở lại bên nhau.",
-  albumCaption8: "Những khoảnh khắc giản dị nhưng thật đáng nhớ.",
-  albumCaption9: "Hạnh phúc của mình được viết bằng nụ cười.",
-  albumCaption10: "Tình yêu là nhà, và mình là của nhau."
+  // Journey Of Love captions (10 ảnh)
+  journeyCaption1: "Khoảnh khắc đầu tiên khi mình nhìn về nhau.",
+  journeyCaption2: "Nụ cười em là lý do khiến ngày hôm đó rực rỡ.",
+  journeyCaption3: "Mình nắm tay nhau qua từng con đường nhỏ.",
+  journeyCaption4: "Bình yên là khi có nhau trong từng khuôn hình.",
+  journeyCaption5: "Một ánh nhìn, một lời hứa, một đời thương.",
+  journeyCaption6: "Ngày hôm đó, thời gian như chậm lại.",
+  journeyCaption7: "Cảm ơn vì đã đến và ở lại bên nhau.",
+  journeyCaption8: "Những khoảnh khắc giản dị nhưng thật đáng nhớ.",
+  journeyCaption9: "Hạnh phúc của mình được viết bằng nụ cười.",
+  journeyCaption10: "Tình yêu là nhà, và mình là của nhau.",
+
+  // The Big Day captions (10 ảnh)
+  bigdayCaption1: "Ngày trọng đại – mình đã chọn nhau.",
+  bigdayCaption2: "Khoảnh khắc bình yên giữa những lời chúc.",
+  bigdayCaption3: "Một ánh nhìn – một đời thương.",
+  bigdayCaption4: "Chúng mình của hôm nay.",
+  bigdayCaption5: "Cảm ơn vì đã có mặt trong ngày vui này.",
+  bigdayCaption6: "Hạnh phúc đôi khi rất giản dị.",
+  bigdayCaption7: "Nắm tay nhau – đi hết một đời.",
+  bigdayCaption8: "Một lời hứa – một mái nhà.",
+  bigdayCaption9: "Yêu thương đong đầy trong từng khung hình.",
+  bigdayCaption10: "Hôm nay, ngày mai và mãi mãi."
 };

@@ -21,10 +21,7 @@ const albumModalCaption = document.getElementById("album-modal-caption");
 const rsvpForm = document.getElementById("rsvp-form");
 const toast = document.getElementById("toast");
 const countdownLabel = document.getElementById("countdown-label");
-const syncStatus = document.getElementById("sync-status");
-const testWebhookBtn = document.getElementById("test-webhook-btn");
-const ceremonyMessage = document.getElementById("ceremony-message");
-const ceremonyMessageText = document.getElementById("ceremony-message-text");
+const syncStatus = document.getElementById("sync-status"); // may be null (UI hidden/removed)
 
 let invitationOpened = false;
 let musicPlaying = false;
@@ -92,6 +89,16 @@ function applyTextContent() {
     const hasChurch = Boolean(text.ceremonyChurchTitle && String(text.ceremonyChurchTitle).trim());
     stack.style.display = hasChurch ? "" : "none";
   }
+
+  // vows: allow \n line breaks
+  const groomVowsEl = document.getElementById("groom-vows");
+  if (groomVowsEl && text.groomVows) {
+    groomVowsEl.innerHTML = String(text.groomVows).trim().replace(/\n+/g, "<br>");
+  }
+  const brideVowsEl = document.getElementById("bride-vows");
+  if (brideVowsEl && text.brideVows) {
+    brideVowsEl.innerHTML = String(text.brideVows).trim().replace(/\n+/g, "<br>");
+  }
 }
 
 function buildCalendar() {
@@ -130,7 +137,7 @@ function applyImageContent() {
     try {
       el.decoding = "async";
     } catch {}
-    if (el.closest("#album-section")) {
+    if (el.closest(".album-section")) {
       el.loading = "lazy";
     } else {
       el.loading = "eager";
@@ -158,17 +165,95 @@ function applyAssetContent() {
 }
 
 function initAlbumModal() {
-  const images = document.querySelectorAll("#album-section .album-item");
-  images.forEach((img) => {
-    img.addEventListener("click", () => {
-      const captionKey = img.getAttribute("data-caption-key");
-      const txt = window.WEDDING_TEXT || {};
-      albumModalImg.src = img.src;
-      albumModalCaption.textContent = (captionKey && txt[captionKey]) ? txt[captionKey] : "Khoảnh khắc đáng nhớ của chúng mình.";
-      openModal(albumModal);
-    });
+  const items = Array.from(document.querySelectorAll(".album-section .album-item"));
+  if (!items.length) return;
+
+  const txt = () => (window.WEDDING_TEXT || {});
+  const gallery = items.map(img => ({
+    src: img.src,
+    captionKey: img.getAttribute("data-caption-key") || ""
+  }));
+
+  let current = 0;
+  let lastSwipeAt = 0;
+  let touch = null;
+
+  function render(idx) {
+    const item = gallery[idx];
+    if (!item) return;
+    current = idx;
+    albumModalImg.src = item.src;
+    const cap = item.captionKey && txt()[item.captionKey] ? txt()[item.captionKey] : "Khoảnh khắc đáng nhớ của chúng mình.";
+    albumModalCaption.textContent = cap;
+  }
+
+  function openAt(idx) {
+    render(idx);
+    openModal(albumModal);
+  }
+
+  function next() {
+    render((current + 1) % gallery.length);
+  }
+
+  function prev() {
+    render((current - 1 + gallery.length) % gallery.length);
+  }
+
+  items.forEach((img, idx) => {
+    img.addEventListener("click", () => openAt(idx));
   });
-  albumModal.addEventListener("click", () => closeModal(albumModal));
+
+  // swipe navigation on modal
+  function onTouchStart(e) {
+    const p = e.touches && e.touches[0] ? e.touches[0] : null;
+    if (!p) return;
+    touch = { x: p.clientX, y: p.clientY, at: Date.now() };
+  }
+  function onTouchMove(e) {
+    if (!touch) return;
+    const p = e.touches && e.touches[0] ? e.touches[0] : null;
+    if (!p) return;
+    const dx = p.clientX - touch.x;
+    const dy = p.clientY - touch.y;
+    if (Math.abs(dx) > 18 && Math.abs(dx) > Math.abs(dy)) {
+      // prevent vertical scroll when swiping images
+      e.preventDefault();
+    }
+  }
+  function onTouchEnd(e) {
+    if (!touch) return;
+    const p = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : null;
+    if (!p) {
+      touch = null;
+      return;
+    }
+    const dx = p.clientX - touch.x;
+    const dy = p.clientY - touch.y;
+    touch = null;
+    if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy)) {
+      lastSwipeAt = Date.now();
+      if (dx < 0) next();
+      else prev();
+    }
+  }
+
+  albumModal.addEventListener("touchstart", onTouchStart, { passive: true });
+  albumModal.addEventListener("touchmove", onTouchMove, { passive: false });
+  albumModal.addEventListener("touchend", onTouchEnd, { passive: true });
+
+  // click anywhere to close (ignore immediately after swipe)
+  albumModal.addEventListener("click", () => {
+    if (Date.now() - lastSwipeAt < 280) return;
+    closeModal(albumModal);
+  });
+
+  // keyboard navigation on desktop
+  window.addEventListener("keydown", e => {
+    if (albumModal.classList.contains("hidden")) return;
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
 }
 
 function hidePreloader() {
@@ -337,7 +422,6 @@ function closeModal(modalEl) {
 }
 
 let toastTimer = null;
-let ceremonyTimer = null;
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
@@ -345,19 +429,6 @@ function showToast(message) {
   toastTimer = setTimeout(() => {
     toast.classList.remove("show");
   }, 1800);
-}
-
-/** Thong diep cam on kieu chu bay, ~4s roi bien mat */
-function showCeremonyMessage(message) {
-  if (!ceremonyMessage || !ceremonyMessageText || !message) return;
-  ceremonyMessageText.textContent = message;
-  ceremonyMessage.classList.remove("show");
-  void ceremonyMessage.offsetWidth;
-  ceremonyMessage.classList.add("show");
-  clearTimeout(ceremonyTimer);
-  ceremonyTimer = setTimeout(() => {
-    ceremonyMessage.classList.remove("show");
-  }, 4000);
 }
 
 function setSyncStatus(message, tone = "") {
@@ -639,45 +710,6 @@ function submitSheetWithQueue(payload, successMsg) {
   });
 }
 
-/** Gửi 2 dòng test (Guestbook + RSVP), không đưa vào hàng đợi — chỉ để kiểm tra endpoint. */
-async function runWebhookTest() {
-  const cfg = window.WEDDING_SHEET || {};
-  if (!cfg.webhookUrl) {
-    setSyncStatus("Chưa cấu hình webhook datasheet", "err");
-    showToast("Thiếu webhookUrl trong sheet-content.js");
-    return;
-  }
-  if (testWebhookBtn) testWebhookBtn.disabled = true;
-  const stamp = new Date().toISOString();
-  setSyncStatus("Đang test webhook…", "warn");
-
-  const gb = await sendToSheet({
-    type: "guestbook",
-    name: "Webhook Test",
-    message: `Kiểm tra kết nối · ${stamp}`
-  });
-  const rsvp = await sendToSheet({
-    type: "rsvp",
-    name: "Webhook Test · RSVP",
-    guests: 1
-  });
-
-  if (testWebhookBtn) testWebhookBtn.disabled = false;
-
-  if (gb.ok && rsvp.ok) {
-    setSyncStatus("Test webhook OK — mở Sheet tab Guestbook & RSVP", "ok");
-    showToast("Đã ghi 2 dòng test lên Sheet");
-    if (loadSheetQueue().length > 0) await flushSheetQueue();
-    await refreshGuestbookFromSheet();
-  } else {
-    const bits = [];
-    if (!gb.ok) bits.push(`Guestbook (${gb.reason || "lỗi"})`);
-    if (!rsvp.ok) bits.push(`RSVP (${rsvp.reason || "lỗi"})`);
-    setSyncStatus(`Test thất bại: ${bits.join(" · ")}`, "err");
-    showToast("Test webhook thất bại — mở DevTools → Network");
-  }
-}
-
 function initPetals() {
   const canvas = document.getElementById("petal-canvas");
   const ctx = canvas.getContext("2d");
@@ -905,9 +937,6 @@ window.addEventListener("load", () => {
     setSyncStatus("Sẵn sàng đồng bộ datasheet", "ok");
     flushSheetQueue();
   }
-  if (testWebhookBtn) {
-    testWebhookBtn.addEventListener("click", () => runWebhookTest());
-  }
 });
 
 window.addEventListener("online", () => {
@@ -951,11 +980,7 @@ guestbookForm.addEventListener("submit", e => {
 
   guestName.value = "";
   guestMessage.value = "";
-  const t = window.WEDDING_TEXT || {};
-  showCeremonyMessage(
-    t.guestbookThankYouMessage ||
-      "Cảm ơn lời chúc tốt đẹp từ bạn đến cô dâu và chú rể."
-  );
+  showToast("Cảm ơn bạn đã gửi lời chúc");
 
   submitSheetWithQueue({
     type: "guestbook",
@@ -975,11 +1000,7 @@ rsvpForm.addEventListener("submit", e => {
   saveRsvp(name, Number(count));
   rsvpForm.reset();
   closeModal(rsvpModal);
-  const t = window.WEDDING_TEXT || {};
-  showCeremonyMessage(
-    t.rsvpThankYouMessage ||
-      "Sự hiện diện của bạn sẽ là niềm vinh hạnh cho gia đình chúng tôi."
-  );
+  showToast("Đã ghi nhận xác nhận tham dự");
 
   submitSheetWithQueue({
     type: "rsvp",

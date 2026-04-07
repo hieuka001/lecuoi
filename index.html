@@ -53,23 +53,34 @@
         <div class="scroll-hint">Kéo lên</div>
       </header>
 
-      <section class="couple-showcase reveal text-reveal" aria-label="Giới thiệu cô dâu chú rể">
+      <section class="couple-showcase" aria-label="Giới thiệu cô dâu chú rể">
         <div class="couple-showcase-bg" aria-hidden="true"></div>
         <div class="couple-showcase-inner">
-          <article class="couple-showpiece couple-showpiece--bride">
-            <p id="bride-intro-label" class="couple-showpiece-label">Chú rể</p>
-            <div class="couple-showpiece-frame">
-              <img data-img-key="bridePortrait" src="" alt="Chú rể" class="couple-showpiece-img" width="400" height="520" decoding="async">
-              <div class="couple-showpiece-gradient couple-showpiece-gradient--bride" aria-hidden="true"></div>
-              <p id="bride-full-name" class="couple-showpiece-script"></p>
+          <article class="couple-row reveal" aria-label="Giới thiệu chú rể">
+            <div class="couple-figure">
+              <p id="groom-intro-label" class="couple-role-label">Chú rể</p>
+              <div class="couple-photo-frame">
+                <img data-img-key="groomPortrait" src="" alt="Chú rể" class="couple-photo" width="420" height="560" decoding="async">
+                <div class="couple-photo-gradient couple-photo-gradient--groom" aria-hidden="true"></div>
+                <p id="groom-full-name" class="couple-name-script couple-name-script--right"></p>
+              </div>
+            </div>
+            <div class="couple-vows" aria-label="Lời thề chú rể">
+              <p id="groom-vows" class="couple-vows-text"></p>
             </div>
           </article>
-          <article class="couple-showpiece couple-showpiece--groom">
-            <p id="groom-intro-label" class="couple-showpiece-label">Chú rể</p>
-            <div class="couple-showpiece-frame">
-              <img data-img-key="groomPortrait" src="" alt="Cô dâu" class="couple-showpiece-img" width="400" height="520" decoding="async">
-              <div class="couple-showpiece-gradient couple-showpiece-gradient--groom" aria-hidden="true"></div>
-              <p id="groom-full-name" class="couple-showpiece-script couple-showpiece-script--groom"></p>
+
+          <article class="couple-row couple-row--reverse reveal" aria-label="Giới thiệu cô dâu">
+            <div class="couple-figure">
+              <p id="bride-intro-label" class="couple-role-label">Cô dâu</p>
+              <div class="couple-photo-frame">
+                <img data-img-key="bridePortrait" src="" alt="Cô dâu" class="couple-photo" width="420" height="560" decoding="async">
+                <div class="couple-photo-gradient couple-photo-gradient--bride" aria-hidden="true"></div>
+                <p id="bride-full-name" class="couple-name-script"></p>
+              </div>
+            </div>
+            <div class="couple-vows" aria-label="Lời thề cô dâu">
+              <p id="bride-vows" class="couple-vows-text"></p>
             </div>
           </article>
         </div>
@@ -143,23 +154,41 @@
         </div>
       </section>
 
-      <section id="album-section" class="px-5 py-16 bg-white album-sec section-divider-bottom">
+      <section id="journey-album" class="px-5 py-16 bg-white album-sec section-divider-bottom album-section" aria-label="Journey Of Love">
         <header class="mb-10 reveal text-reveal">
-          <p class="font-script text-7xl text-[#C5A880] leading-none">The</p>
-          <h2 class="font-serif text-4xl tracking-[0.25em] ml-8">ALBUM</h2>
-          <p class="font-serif text-sm tracking-[0.45em] text-gray-500 ml-10">OF LOVE</p>
+          <p class="font-script text-7xl text-[#C5A880] leading-none">Journey</p>
+          <h2 class="font-serif text-4xl tracking-[0.2em] ml-6">OF LOVE</h2>
         </header>
         <div class="album-grid reveal">
-          <img data-img-key="album1" data-caption-key="albumCaption1" src="" alt="Album 1" class="album-item album-reveal from-right" style="--album-delay: 0.06s;">
-          <img data-img-key="album2" data-caption-key="albumCaption2" src="" alt="Album 2" class="album-item album-reveal from-left" style="--album-delay: 0.14s;">
-          <img data-img-key="album3" data-caption-key="albumCaption3" src="" alt="Album 3" class="album-item album-reveal from-right" style="--album-delay: 0.22s;">
-          <img data-img-key="album4" data-caption-key="albumCaption4" src="" alt="Album 4" class="album-item album-reveal from-left" style="--album-delay: 0.30s;">
-          <img data-img-key="album5" data-caption-key="albumCaption5" src="" alt="Album 5" class="album-item album-reveal from-right" style="--album-delay: 0.38s;">
-          <img data-img-key="album6" data-caption-key="albumCaption6" src="" alt="Album 6" class="album-item album-reveal from-left" style="--album-delay: 0.46s;">
-          <img data-img-key="album7" data-caption-key="albumCaption7" src="" alt="Album 7" class="album-item album-reveal from-right" style="--album-delay: 0.54s;">
-          <img data-img-key="album8" data-caption-key="albumCaption8" src="" alt="Album 8" class="album-item album-reveal from-left" style="--album-delay: 0.62s;">
-          <img data-img-key="album9" data-caption-key="albumCaption9" src="" alt="Album 9" class="album-item album-reveal from-right" style="--album-delay: 0.70s;">
-          <img data-img-key="album10" data-caption-key="albumCaption10" src="" alt="Album 10" class="album-item album-reveal from-left" style="--album-delay: 0.78s;">
+          <img data-img-key="journey1" data-caption-key="journeyCaption1" src="" alt="Journey 1" class="album-item album-reveal from-right" style="--album-delay: 0.06s;">
+          <img data-img-key="journey2" data-caption-key="journeyCaption2" src="" alt="Journey 2" class="album-item album-reveal from-left" style="--album-delay: 0.14s;">
+          <img data-img-key="journey3" data-caption-key="journeyCaption3" src="" alt="Journey 3" class="album-item album-reveal from-right" style="--album-delay: 0.22s;">
+          <img data-img-key="journey4" data-caption-key="journeyCaption4" src="" alt="Journey 4" class="album-item album-reveal from-left" style="--album-delay: 0.30s;">
+          <img data-img-key="journey5" data-caption-key="journeyCaption5" src="" alt="Journey 5" class="album-item album-reveal from-right" style="--album-delay: 0.38s;">
+          <img data-img-key="journey6" data-caption-key="journeyCaption6" src="" alt="Journey 6" class="album-item album-reveal from-left" style="--album-delay: 0.46s;">
+          <img data-img-key="journey7" data-caption-key="journeyCaption7" src="" alt="Journey 7" class="album-item album-reveal from-right" style="--album-delay: 0.54s;">
+          <img data-img-key="journey8" data-caption-key="journeyCaption8" src="" alt="Journey 8" class="album-item album-reveal from-left" style="--album-delay: 0.62s;">
+          <img data-img-key="journey9" data-caption-key="journeyCaption9" src="" alt="Journey 9" class="album-item album-reveal from-right" style="--album-delay: 0.70s;">
+          <img data-img-key="journey10" data-caption-key="journeyCaption10" src="" alt="Journey 10" class="album-item album-reveal from-left" style="--album-delay: 0.78s;">
+        </div>
+      </section>
+
+      <section id="bigday-album" class="px-5 py-16 bg-white album-sec section-divider-bottom album-section" aria-label="The Big Day">
+        <header class="mb-10 reveal text-reveal">
+          <p class="font-script text-7xl text-[#C5A880] leading-none">The</p>
+          <h2 class="font-serif text-4xl tracking-[0.18em] ml-8">BIG DAY</h2>
+        </header>
+        <div class="album-grid reveal">
+          <img data-img-key="bigday1" data-caption-key="bigdayCaption1" src="" alt="Big Day 1" class="album-item album-reveal from-right" style="--album-delay: 0.06s;">
+          <img data-img-key="bigday2" data-caption-key="bigdayCaption2" src="" alt="Big Day 2" class="album-item album-reveal from-left" style="--album-delay: 0.14s;">
+          <img data-img-key="bigday3" data-caption-key="bigdayCaption3" src="" alt="Big Day 3" class="album-item album-reveal from-right" style="--album-delay: 0.22s;">
+          <img data-img-key="bigday4" data-caption-key="bigdayCaption4" src="" alt="Big Day 4" class="album-item album-reveal from-left" style="--album-delay: 0.30s;">
+          <img data-img-key="bigday5" data-caption-key="bigdayCaption5" src="" alt="Big Day 5" class="album-item album-reveal from-right" style="--album-delay: 0.38s;">
+          <img data-img-key="bigday6" data-caption-key="bigdayCaption6" src="" alt="Big Day 6" class="album-item album-reveal from-left" style="--album-delay: 0.46s;">
+          <img data-img-key="bigday7" data-caption-key="bigdayCaption7" src="" alt="Big Day 7" class="album-item album-reveal from-right" style="--album-delay: 0.54s;">
+          <img data-img-key="bigday8" data-caption-key="bigdayCaption8" src="" alt="Big Day 8" class="album-item album-reveal from-left" style="--album-delay: 0.62s;">
+          <img data-img-key="bigday9" data-caption-key="bigdayCaption9" src="" alt="Big Day 9" class="album-item album-reveal from-right" style="--album-delay: 0.70s;">
+          <img data-img-key="bigday10" data-caption-key="bigdayCaption10" src="" alt="Big Day 10" class="album-item album-reveal from-left" style="--album-delay: 0.78s;">
         </div>
       </section>
 
@@ -216,14 +245,7 @@
         </div>
       </div>
     </div>
-    <div id="ceremony-message" class="ceremony-message" role="status" aria-live="polite">
-      <p id="ceremony-message-text" class="ceremony-message-text"></p>
-    </div>
     <div id="toast" class="toast">Đã ghi nhận thông tin của bạn</div>
-    <div class="sync-bar" id="sync-bar" aria-label="Trạng thái đồng bộ datasheet">
-      <div id="sync-status" class="sync-status">Chưa cấu hình datasheet</div>
-      <button type="button" id="test-webhook-btn" class="sync-test-btn" title="Gửi một dòng test lên Google Sheet (Guestbook + RSVP)">Test webhook</button>
-    </div>
   </div>
   <script src="./text-content.js"></script>
   <script src="./image-content.js"></script>
