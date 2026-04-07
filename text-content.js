@@ -6,8 +6,8 @@ window.WEDDING_TEXT = {
   countdownTarget: "2026-05-03T17:00:00+07:00",
   inviteMessage: "Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi",
   coupleScript: "Khắc Tín<br>Yến Nhi",
-  groomFullName: "Phaolô Hồ Khắc Tín",
-  brideFullName: "Maria Trần Phạm Yến Nhi",
+  groomFullName: "Khắc Tín",
+  brideFullName: "Yến Nhi",
   brideIntroLabel: "Cô dâu",
   groomIntroLabel: "Chú rể",
   groomVows:
