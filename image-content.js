@@ -13,7 +13,7 @@ window.WEDDING_IMAGES = {
   journey7: "https://raw.githubusercontent.com/hieuka001/anhcuoi/refs/heads/main/aniversary.jpg?auto=format&fit=crop&q=80&w=800",
   journey8: "https://raw.githubusercontent.com/hieuka001/anhcuoi/refs/heads/main/xedap.jpg?auto=format&fit=crop&q=80&w=800",
   journey9: "https://raw.githubusercontent.com/hieuka001/anhcuoi/refs/heads/main/dibien.jpg?auto=format&fit=crop&q=80&w=800",
-  journey10: "https://raw.githubusercontent.com/hieuka001/Anki-images/main/uploads/temp_upload_20260401_155614.png?auto=format&fit=crop&q=80&w=800",
+  journey10: "https://raw.githubusercontent.com/hieuka001/anhcuoi/refs/heads/main/om.JPG?auto=format&fit=crop&q=80&w=800",
 
   // The Big Day (10 ảnh) - tạm dùng lại link, bạn thay bằng ảnh ngày cưới thật
   bigday1: "https://raw.githubusercontent.com/hieuka001/Anki-images/main/uploads/temp_upload_20260401_155346.png?auto=format&fit=crop&q=80&w=800",
