@@ -255,6 +255,17 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.couple-vows-name {
+  margin: 0 0 0.5rem;
+  font-family: var(--dancing);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: #3b2a20;
+  letter-spacing: 0.02em;
+  text-rendering: optimizeLegibility;
+}
+
 .couple-vows-text::before {
   content: "“";
   display: inline-block;

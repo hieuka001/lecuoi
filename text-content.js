@@ -6,8 +6,8 @@ window.WEDDING_TEXT = {
   countdownTarget: "2026-05-03T17:00:00+07:00",
   inviteMessage: "Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi",
   coupleScript: "Khắc Tín<br>Yến Nhi",
-  groomFullName: "Khắc Tín",
-  brideFullName: "Yến Nhi",
+  groomFullName: "Phaolô Hồ Khắc Tín",
+  brideFullName: "Maria Trần Phạm Yến Nhi",
   brideIntroLabel: "Cô dâu",
   groomIntroLabel: "Chú rể",
   groomVows:
@@ -15,10 +15,6 @@ window.WEDDING_TEXT = {
   brideVows:
     "Em chọn anh là nhà,\nLà người đồng hành, là niềm tin trọn đời.",
   /** Hôn lễ tại nhà thờ — sửa nội dung tại đây */
-  ceremonyChurchTitle: "Hôn lễ được cử hành tại Thánh đường Giáo xứ Vinh Trung",
-  ceremonyChurchTime: "Vào lúc 10 giờ 00",
-  ceremonyChurchDate: "Thứ Bảy · 02.05.2026",
-  ceremonyChurchLunar: "(Nhằm ngày 16 tháng 03 năm Bính Ngọ)",
   eventTime: "VÀO LÚC 11 GIỜ | CHỦ NHẬT",
   eventDateText: "NGÀY 03 THÁNG 05 NĂM 2026",
   eventDateLunar: "(TỨC NGÀY 17 THÁNG 03 NĂM BÍNH NGỌ)",
