@@ -1,4 +1,5 @@
 const preloader = document.getElementById("preloader");
+const preloaderText = document.getElementById("preloader-text");
 const envelope = document.getElementById("envelope");
 const sealBtn = document.getElementById("seal-btn");
 
@@ -257,14 +258,77 @@ function initAlbumModal() {
 }
 
 function hidePreloader() {
+  preloader.style.opacity = "0";
+  preloader.style.transition = "opacity .4s ease";
   setTimeout(() => {
-    preloader.style.opacity = "0";
-    preloader.style.transition = "opacity .4s ease";
-    setTimeout(() => {
-      preloader.style.display = "none";
-      autoOpenEnvelope();
-    }, 420);
-  }, 900);
+    preloader.style.display = "none";
+    autoOpenEnvelope();
+  }, 420);
+}
+
+function updatePreloader(message) {
+  if (preloaderText && message) preloaderText.textContent = message;
+}
+
+function preloadOneImage(url, timeoutMs = 6000) {
+  return new Promise(resolve => {
+    if (!url) return resolve({ ok: false, url });
+    const img = new Image();
+    let done = false;
+    const finish = ok => {
+      if (done) return;
+      done = true;
+      resolve({ ok, url });
+    };
+    const t = setTimeout(() => finish(false), timeoutMs);
+    img.onload = async () => {
+      clearTimeout(t);
+      try {
+        if (typeof img.decode === "function") await img.decode();
+      } catch {}
+      finish(true);
+    };
+    img.onerror = () => {
+      clearTimeout(t);
+      finish(false);
+    };
+    img.decoding = "async";
+    img.src = url;
+  });
+}
+
+async function preloadCriticalImages() {
+  const images = window.WEDDING_IMAGES || {};
+  const urls = Array.from(new Set(Object.values(images).filter(Boolean)));
+  if (!urls.length) return;
+
+  const startedAt = Date.now();
+  updatePreloader("Đang tải ảnh… 0%");
+
+  // tải song song vừa phải để đỡ nghẽn mạng + tránh giật
+  const concurrency = 4;
+  let idx = 0;
+  let done = 0;
+
+  async function worker() {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const myIdx = idx;
+      idx += 1;
+      if (myIdx >= urls.length) break;
+      // eslint-disable-next-line no-await-in-loop
+      await preloadOneImage(urls[myIdx], 9000);
+      done += 1;
+      const pct = Math.round((done / urls.length) * 100);
+      updatePreloader(`Đang tải ảnh… ${pct}%`);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(concurrency, urls.length) }, () => worker()));
+
+  // để UI “êm” trước khi mở phong bì
+  const spent = Date.now() - startedAt;
+  if (spent < 650) await new Promise(r => setTimeout(r, 650 - spent));
 }
 
 function openInvitation() {
@@ -914,7 +978,7 @@ function initPetals() {
   draw();
 }
 
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
   applyTextContent();
   applyImageContent();
   applyAssetContent();
@@ -923,9 +987,15 @@ window.addEventListener("load", () => {
   try {
     bgAudio.load();
   } catch {}
+  // preload ảnh quan trọng trước khi mở thiệp để tránh giật/lag khi lướt
+  try {
+    await preloadCriticalImages();
+  } catch {}
+
   hidePreloader();
   initReveal();
   initAlbumModal();
+  // petals để sau khi đã preload xong (đỡ giật lúc mới vào)
   initPetals();
   updateCountdown();
   setInterval(updateCountdown, 1000);
