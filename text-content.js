@@ -5,7 +5,7 @@ window.WEDDING_TEXT = {
   // Dung cho countdown (ISO). Vi du: "2026-05-03T17:00:00+07:00"
   countdownTarget: "2026-05-03T17:00:00+07:00",
   inviteMessage: "Trân trọng kính mời quý khách tới dự bữa tiệc mừng lễ thành hôn của hai chúng tôi",
-  coupleScript: "Khắc Tín<br>Yến Nhi",
+  coupleScript: "Yến Nhi<br>Khắc Tín",
   groomFullName: "Phaolô Hồ Khắc Tín",
   brideFullName: "Maria Trần Phạm Yến Nhi",
   brideIntroLabel: "Cô dâu",
