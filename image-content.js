@@ -1,7 +1,7 @@
 window.WEDDING_IMAGES = {
   hero: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/15.jpg?auto=format&fit=crop&q=80&w=1200",
   bridePortrait: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775661307919-MTN07563.jpg?auto=format&fit=crop&q=80&w=800",
-  groomPortrait: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775661307919-MTN07563.jpg?auto=format&fit=crop&q=80&w=800",
+  groomPortrait: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775661305007-MTN08084.jpg?auto=format&fit=crop&q=80&w=800",
   saveDate: "https://raw.githubusercontent.com/hieuka001/Anki-images/main/uploads/temp_upload_20260407_154250.png?auto=format&fit=crop&q=80&w=1200",
   // Journey Of Love (10 ảnh)
   journey1: "https://raw.githubusercontent.com/hieuka001/anhcuoi/refs/heads/main/nhatho.jpg?auto=format&fit=crop&q=80&w=800",
