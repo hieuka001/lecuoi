@@ -16,15 +16,15 @@ window.WEDDING_IMAGES = {
   journey10: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775570509168-z7701652318218_0a6109201636737a10864e3d00d3e181.jpg?auto=format&fit=crop&q=80&w=800",
 
   // The Big Day (10 ảnh) - tạm dùng lại link, bạn thay bằng ảnh ngày cưới thật
-  bigday1: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775572006137-MTN08326.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday2: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775571980611-MTN08583.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday3: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775572038924-MTN07456.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday4: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775571888443-MTN06984.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday5: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775572079655-MTN09235.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday6: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775571945919-MTN08478.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday7: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775571908199-MTN09117.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday8: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775571860766-MTN08252.jpg?auto=format&fit=crop&q=80&w=800",
-  bigday9: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775572063047-MTN06968.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday1: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655400831-MTN08326.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday2: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655398648-MTN08583.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday3: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655395936-MTN07456.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday4: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655393811-MTN06984.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday5: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655391715-MTN09235.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday6: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655389224-MTN08478.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday7: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655387379-MTN09117.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday8: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655384980-MTN08252.jpg?auto=format&fit=crop&q=80&w=800",
+  bigday9: "https://cdn.jsdelivr.net/gh/hieuka001/anhcuoi@main/images/1775655382551-MTN06968.jpg?auto=format&fit=crop&q=80&w=800",
   bigday10: "https://raw.githubusercontent.com/hieuka001/Anki-images/main/uploads/temp_upload_20260407_214516.png?auto=format&fit=crop&q=80&w=800",
   footer: "https://raw.githubusercontent.com/hieuka001/Anki-images/main/uploads/temp_upload_20260401_155952.png?auto=format&fit=crop&q=80&w=1200"
 };
