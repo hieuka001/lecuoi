@@ -283,7 +283,6 @@ function hidePreloader() {
   preloader.style.transition = "opacity .4s ease";
   setTimeout(() => {
     preloader.style.display = "none";
-    autoOpenEnvelope();
   }, 420);
 }
 
@@ -365,20 +364,6 @@ function openInvitation() {
   setTimeout(() => {
     envelope.style.display = "none";
   }, 1100);
-}
-
-function autoOpenEnvelope() {
-  setTimeout(() => {
-    // Auto-open có thể bị chặn autoplay; không ép bật nhạc
-    if (!invitationOpened) {
-      sealBtn.classList.add("hide");
-      envelope.classList.add("open");
-      setTimeout(() => {
-        envelope.style.display = "none";
-      }, 1100);
-      invitationOpened = true;
-    }
-  }, 2000);
 }
 
 function playMusic() {
@@ -1107,7 +1092,7 @@ rsvpForm.addEventListener("submit", e => {
   saveRsvp(name, Number(count));
   rsvpForm.reset();
   closeModal(rsvpModal);
-  showToast("Đã ghi nhận xác nhận tham dự");
+  showToast("Sự hiện diện của bạn là niềm vinh dự cho gia đình chúng tôi");
 
   submitSheetWithQueue({
     type: "rsvp",
